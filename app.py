@@ -70,10 +70,10 @@ st.markdown(
     .stApp {
         background-color: #dff3ff;
         background-image:
-            repeating-radial-gradient(ellipse at 20% 25%, transparent 0px, transparent 34px, rgba(6,74,155,0.12) 35px, transparent 37px),
-            repeating-radial-gradient(ellipse at 78% 18%, transparent 0px, transparent 42px, rgba(6,74,155,0.10) 43px, transparent 46px),
+            repeating-radial-gradient(ellipse at 18% 28%, transparent 0px, transparent 34px, rgba(6,74,155,0.12) 35px, transparent 37px),
+            repeating-radial-gradient(ellipse at 78% 16%, transparent 0px, transparent 42px, rgba(6,74,155,0.10) 43px, transparent 46px),
             repeating-radial-gradient(ellipse at 55% 78%, transparent 0px, transparent 56px, rgba(6,74,155,0.08) 57px, transparent 60px),
-            linear-gradient(180deg, rgba(223,243,255,0.95), rgba(235,248,255,0.95));
+            linear-gradient(180deg, rgba(223,243,255,0.96), rgba(235,248,255,0.96));
         background-attachment: fixed;
     }
     .block-container {
@@ -144,8 +144,16 @@ st.markdown(
         padding:0.6rem;
         text-align:center;
         font-weight:900;
-        margin-bottom:0.45rem;
-        min-height:92px;
+        margin-bottom:0.15rem;
+        min-height:105px;
+    }
+    .dose-arrow {
+        color:#071B4D;
+        text-align:center;
+        font-size:1.55rem;
+        font-weight:900;
+        line-height:1;
+        margin-bottom:0.25rem;
     }
     .detox {
         border:2px solid #666;
@@ -305,7 +313,7 @@ def dose_pills(smbs, cuso4, main_color, note_type, r):
             {smbs:.1f} mg/L<br>
             ({r['smbs_kgh']:.1f} kg/h)
             """
-        st.markdown(f"<div class='dose-box' style='background:{main_color};'>{text}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='dose-box' style='background:{main_color};'>{text}</div><div class='dose-arrow'>↓</div>", unsafe_allow_html=True)
 
     with b:
         if note_type == "pump":
@@ -328,27 +336,16 @@ def dose_pills(smbs, cuso4, main_color, note_type, r):
             {cuso4:.1f} mg/L<br>
             ({r['cuso4_kgh']:.1f} kg/h)
             """
-        st.markdown(f"<div class='dose-box' style='background:{COLORS['orange']};'>{text}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='dose-box' style='background:{COLORS['orange']};'>{text}</div><div class='dose-arrow'>↓</div>", unsafe_allow_html=True)
 
 def process_visual():
-    st.markdown(
-        """
-        <div style="display:grid; grid-template-columns: 1fr 1.4fr 1fr; gap:0.45rem; align-items:center; margin:0.35rem 0 0.55rem 0;">
-            <div style="display:flex; flex-direction:column; gap:0.35rem;">
-                <div style="background:#0B6B2B; color:white; border-radius:8px; padding:0.45rem; text-align:center; font-weight:800;">
-                    SMBS Flow<br><span style="font-size:1.35rem;">➜</span>
-                </div>
-                <div style="background:#D55E00; color:white; border-radius:8px; padding:0.45rem; text-align:center; font-weight:800;">
-                    CuSO₄ Flow<br><span style="font-size:1.35rem;">➜</span>
-                </div>
-                <div class='flow-box'>Slurry Inflow<br>1950 m³/h <span style="font-size:1.2rem;">➜</span></div>
-            </div>
-            <div class='detox'>DETOX TANK<br>2880 m³</div>
-            <div class='compliance'>Treated Slurry<br>WADCN ≤ 0.5 ppm<br><span style="font-size:1.35rem;">➜</span></div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    a, b, c = st.columns([1, 1.5, 1])
+    with a:
+        st.markdown("<div class='flow-box'>Slurry Inflow<br>1950 m³/h ➜</div>", unsafe_allow_html=True)
+    with b:
+        st.markdown("<div class='detox'>DETOX TANK<br>2880 m³</div>", unsafe_allow_html=True)
+    with c:
+        st.markdown("<div class='compliance'>Treated Slurry<br>WADCN ≤ 0.5 ppm ➜</div>", unsafe_allow_html=True)
 
 def zone_label(value, low, high, unit):
     if value < low:
