@@ -70,11 +70,10 @@ st.markdown(
     .stApp {
         background-color: #dff3ff;
         background-image:
-            radial-gradient(ellipse at 20% 20%, rgba(6, 74, 155, 0.18) 0%, rgba(6, 74, 155, 0.18) 1px, transparent 2px),
-            radial-gradient(ellipse at 80% 10%, rgba(6, 74, 155, 0.14) 0%, rgba(6, 74, 155, 0.14) 1px, transparent 2px),
-            repeating-radial-gradient(ellipse at 15% 35%, transparent 0px, transparent 32px, rgba(6, 74, 155, 0.10) 33px, transparent 35px),
-            repeating-radial-gradient(ellipse at 85% 75%, transparent 0px, transparent 38px, rgba(6, 74, 155, 0.09) 39px, transparent 42px),
-            repeating-radial-gradient(ellipse at 50% 50%, transparent 0px, transparent 54px, rgba(6, 74, 155, 0.055) 55px, transparent 58px);
+            repeating-radial-gradient(ellipse at 20% 25%, transparent 0px, transparent 34px, rgba(6,74,155,0.12) 35px, transparent 37px),
+            repeating-radial-gradient(ellipse at 78% 18%, transparent 0px, transparent 42px, rgba(6,74,155,0.10) 43px, transparent 46px),
+            repeating-radial-gradient(ellipse at 55% 78%, transparent 0px, transparent 56px, rgba(6,74,155,0.08) 57px, transparent 60px),
+            linear-gradient(180deg, rgba(223,243,255,0.95), rgba(235,248,255,0.95));
         background-attachment: fixed;
     }
     .block-container {
@@ -83,7 +82,7 @@ st.markdown(
         max-width: 98%;
     }
     .title-card {
-        background: rgba(255,255,255,0.92);
+        background: rgba(255,255,255,0.94);
         border: 1px solid #d9d9d9;
         border-radius: 14px;
         padding: 1rem 1.2rem 0.85rem 1.2rem;
@@ -121,27 +120,6 @@ st.markdown(
         font-style:italic;
         font-weight:600;
         opacity:0.95;
-    }
-    .pump-wrap {
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        margin:0.45rem 0 0.6rem 0;
-    }
-    .pump-card {
-        border: 1px solid #d0d0d0;
-        border-radius: 12px;
-        background: rgba(255,255,255,0.92);
-        padding: 0.55rem;
-        text-align:center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.06);
-        width:100%;
-    }
-    .pump-label {
-        font-size:0.82rem;
-        font-weight:800;
-        color:#333;
-        margin-top:0.25rem;
     }
     .uncertainty-banner {
         border:1px solid #cfcfcf;
@@ -279,53 +257,6 @@ def panel_header(title, subtitle, color):
         unsafe_allow_html=True,
     )
 
-def pump_svg(main_color, accent_color="#D55E00"):
-    """Inline SVG pump illustration used as a lightweight dashboard visual."""
-    return f"""
-    <svg width="100%" height="92" viewBox="0 0 420 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="dosing pump">
-        <defs>
-            <linearGradient id="tankGrad" x1="0" x2="1">
-                <stop offset="0%" stop-color="#f9fbfc"/>
-                <stop offset="100%" stop-color="#cfd8df"/>
-            </linearGradient>
-        </defs>
-        <!-- skid base -->
-        <rect x="35" y="118" width="350" height="12" rx="6" fill="#6b7780"/>
-        <rect x="55" y="128" width="55" height="9" rx="3" fill="#46515a"/>
-        <rect x="310" y="128" width="55" height="9" rx="3" fill="#46515a"/>
-        <!-- pump motor -->
-        <rect x="60" y="55" width="115" height="58" rx="14" fill="{main_color}" opacity="0.95"/>
-        <circle cx="92" cy="84" r="18" fill="#ffffff" opacity="0.25"/>
-        <rect x="82" y="34" width="48" height="24" rx="5" fill="#30363b"/>
-        <!-- pump head -->
-        <circle cx="195" cy="83" r="32" fill="url(#tankGrad)" stroke="#4c5963" stroke-width="4"/>
-        <circle cx="195" cy="83" r="14" fill="{accent_color}" opacity="0.85"/>
-        <!-- suction/discharge tubing -->
-        <path d="M226 83 C262 83, 262 45, 303 45" stroke="{accent_color}" stroke-width="10" fill="none" stroke-linecap="round"/>
-        <path d="M226 88 C270 95, 290 108, 350 108" stroke="{main_color}" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.85"/>
-        <rect x="303" y="34" width="70" height="22" rx="8" fill="{accent_color}" opacity="0.9"/>
-        <rect x="348" y="98" width="45" height="20" rx="7" fill="{main_color}" opacity="0.9"/>
-        <!-- flow arrows -->
-        <polygon points="282,37 296,45 282,53" fill="#ffffff"/>
-        <polygon points="330,100 344,108 330,116" fill="#ffffff"/>
-        <!-- label plate -->
-        <rect x="70" y="94" width="92" height="12" rx="4" fill="#ffffff" opacity="0.7"/>
-    </svg>
-    """
-
-def pump_visual(label, main_color, accent_color="#D55E00"):
-    st.markdown(
-        f"""
-        <div class="pump-wrap">
-            <div class="pump-card">
-                {pump_svg(main_color, accent_color)}
-                <div class="pump-label">{label}</div>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
 def uncertainty_banner(note_type, color):
     if note_type == "pump":
         st.markdown(
@@ -400,13 +331,24 @@ def dose_pills(smbs, cuso4, main_color, note_type, r):
         st.markdown(f"<div class='dose-box' style='background:{COLORS['orange']};'>{text}</div>", unsafe_allow_html=True)
 
 def process_visual():
-    a, b, c = st.columns([1, 1.5, 1])
-    with a:
-        st.markdown("<div class='flow-box'>Slurry Inflow<br>1950 m³/h</div>", unsafe_allow_html=True)
-    with b:
-        st.markdown("<div class='detox'>DETOX TANK<br>2880 m³</div>", unsafe_allow_html=True)
-    with c:
-        st.markdown("<div class='compliance'>Treated Slurry<br>WADCN ≤ 0.5 ppm</div>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="display:grid; grid-template-columns: 1fr 1.4fr 1fr; gap:0.45rem; align-items:center; margin:0.35rem 0 0.55rem 0;">
+            <div style="display:flex; flex-direction:column; gap:0.35rem;">
+                <div style="background:#0B6B2B; color:white; border-radius:8px; padding:0.45rem; text-align:center; font-weight:800;">
+                    SMBS Flow<br><span style="font-size:1.35rem;">➜</span>
+                </div>
+                <div style="background:#D55E00; color:white; border-radius:8px; padding:0.45rem; text-align:center; font-weight:800;">
+                    CuSO₄ Flow<br><span style="font-size:1.35rem;">➜</span>
+                </div>
+                <div class='flow-box'>Slurry Inflow<br>1950 m³/h <span style="font-size:1.2rem;">➜</span></div>
+            </div>
+            <div class='detox'>DETOX TANK<br>2880 m³</div>
+            <div class='compliance'>Treated Slurry<br>WADCN ≤ 0.5 ppm<br><span style="font-size:1.35rem;">➜</span></div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 def zone_label(value, low, high, unit):
     if value < low:
@@ -461,7 +403,6 @@ def show_panel(title, subtitle, color, default_smbs, default_cuso4, key, note_ty
     with st.container(border=True):
         panel_header(title, subtitle, color)
         uncertainty_banner(note_type, color)
-        pump_visual("SMBS + CuSO₄ dosing pump system", color, COLORS["orange"])
 
         smbs = st.slider("SMBS dosing (mg/L)", 0.0, 150.0, float(default_smbs), 0.1, key=f"{key}_smbs")
         cuso4 = st.slider("CuSO₄ dosing (mg/L)", 0.0, 80.0, float(default_cuso4), 0.1, key=f"{key}_cuso4")
