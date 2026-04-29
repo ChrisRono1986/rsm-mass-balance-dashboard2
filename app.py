@@ -105,6 +105,15 @@ st.markdown(
         font-weight:600;
         opacity:0.95;
     }
+    .uncertainty-banner {
+        border:1px solid #cfcfcf;
+        border-radius:10px;
+        padding:0.65rem;
+        margin:0.45rem 0 0.65rem 0;
+        background:#fbfbfb;
+        font-size:0.86rem;
+        line-height:1.25;
+    }
     .section-label {
         padding:0.32rem;
         border-radius:8px;
@@ -116,10 +125,11 @@ st.markdown(
     .dose-box {
         color:white;
         border-radius:8px;
-        padding:0.55rem;
+        padding:0.6rem;
         text-align:center;
         font-weight:900;
-        margin-bottom:0.4rem;
+        margin-bottom:0.45rem;
+        min-height:92px;
     }
     .detox {
         border:2px solid #666;
@@ -231,18 +241,78 @@ def panel_header(title, subtitle, color):
         unsafe_allow_html=True,
     )
 
-def dose_pills(smbs, cuso4, main_color):
+def uncertainty_banner(note_type, color):
+    if note_type == "pump":
+        st.markdown(
+            f"""
+            <div class="uncertainty-banner" style="border-left:7px solid {color};">
+                <b>PUMP MEASUREMENT UNCERTAINTY: ±10%</b><br>
+                All pump-derived values are reported as a range (min–max).<br>
+                Ranges reflect the uncertainty of dosing pumps.
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    elif note_type == "rsm":
+        st.markdown(
+            f"""
+            <div class="uncertainty-banner" style="border-left:7px solid {color};">
+                <b>MODEL-BASED VALUES (WADCN UNCERTAINTY APPLIED)</b><br>
+                WADCN expanded uncertainty: ±0.57 ppm.<br>
+                Results shown as lower–central–upper estimates.
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+def dose_pills(smbs, cuso4, main_color, note_type, r):
     a, b = st.columns(2)
+
     with a:
-        st.markdown(
-            f"<div class='dose-box' style='background:{main_color};'>SMBS Dosing<br>{smbs:.1f} mg/L<br>({smbs*SLURRY_FLOW_M3H/1000:.1f} kg/h)</div>",
-            unsafe_allow_html=True,
-        )
+        if note_type == "pump":
+            text = f"""
+            <b>SMBS Dosing</b><br>
+            {smbs:.1f} ±10% mg/L<br>
+            ({smbs*0.9:.1f} – {smbs*1.1:.1f} mg/L)<br>
+            ({r['smbs_kgh']*0.9:.1f} – {r['smbs_kgh']*1.1:.1f} kg/h)
+            """
+        elif note_type == "rsm":
+            text = """
+            <b>SMBS Dosing</b><br>
+            2.916 – 2.932 – 2.950 m³/hr<br>
+            (89.4 mg/L)<br>
+            (174.3 kg/h)
+            """
+        else:
+            text = f"""
+            <b>SMBS Dosing</b><br>
+            {smbs:.1f} mg/L<br>
+            ({r['smbs_kgh']:.1f} kg/h)
+            """
+        st.markdown(f"<div class='dose-box' style='background:{main_color};'>{text}</div>", unsafe_allow_html=True)
+
     with b:
-        st.markdown(
-            f"<div class='dose-box' style='background:{COLORS['orange']};'>CuSO₄ Dosing<br>{cuso4:.1f} mg/L<br>({cuso4*SLURRY_FLOW_M3H/1000:.1f} kg/h)</div>",
-            unsafe_allow_html=True,
-        )
+        if note_type == "pump":
+            text = f"""
+            <b>CuSO₄ Dosing</b><br>
+            {cuso4:.1f} ±10% mg/L<br>
+            ({cuso4*0.9:.1f} – {cuso4*1.1:.1f} mg/L)<br>
+            ({r['cuso4_kgh']*0.9:.1f} – {r['cuso4_kgh']*1.1:.1f} kg/h)
+            """
+        elif note_type == "rsm":
+            text = """
+            <b>CuSO₄ Dosing</b><br>
+            0.163 – 0.165 – 0.166 m³/hr<br>
+            (12.2 mg/L)<br>
+            (23.8 kg/h)
+            """
+        else:
+            text = f"""
+            <b>CuSO₄ Dosing</b><br>
+            {cuso4:.1f} mg/L<br>
+            ({r['cuso4_kgh']:.1f} kg/h)
+            """
+        st.markdown(f"<div class='dose-box' style='background:{COLORS['orange']};'>{text}</div>", unsafe_allow_html=True)
 
 def process_visual():
     a, b, c = st.columns([1, 1.5, 1])
@@ -305,14 +375,19 @@ def tables(r, color, note_type):
 def show_panel(title, subtitle, color, default_smbs, default_cuso4, key, note_type):
     with st.container(border=True):
         panel_header(title, subtitle, color)
+        uncertainty_banner(note_type, color)
+
         smbs = st.slider("SMBS dosing (mg/L)", 0.0, 150.0, float(default_smbs), 0.1, key=f"{key}_smbs")
         cuso4 = st.slider("CuSO₄ dosing (mg/L)", 0.0, 80.0, float(default_cuso4), 0.1, key=f"{key}_cuso4")
+
         r = calc_from_mgl(smbs, cuso4)
-        dose_pills(smbs, cuso4, color)
+        dose_pills(smbs, cuso4, color, note_type, r)
         process_visual()
+
         st.markdown("**Operational zone vs RSM target region**")
         zone_label(smbs, 83.7, 95.1, "mg/L SMBS")
         zone_label(cuso4, 11.4, 13.0, "mg/L CuSO₄")
+
         tables(r, color, note_type)
         return r
 
@@ -320,12 +395,12 @@ def show_panel(title, subtitle, color, default_smbs, default_cuso4, key, note_ty
 # APP
 # =========================
 st.markdown(
-    '''
+    """
     <div class="title-card">
         <div class="title">MASS BALANCE TRANSLATION: FROM LABORATORY OPTIMIZATION TO PLANT OPERATION</div>
         <div class="subtitle">Validation of reagent efficiency based on real plant data | Effective operating hours: 6908.3 h | Slurry flow rate: 1950 m³/h</div>
     </div>
-    ''',
+    """,
     unsafe_allow_html=True
 )
 
