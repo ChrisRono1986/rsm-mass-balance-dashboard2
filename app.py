@@ -61,21 +61,34 @@ st.markdown(
     """
     <style>
     .block-container {
-        padding-top: 1.2rem;
+        padding-top: 2.4rem;
         padding-bottom: 1rem;
+        max-width: 98%;
+    }
+    .title-card {
+        background: white;
+        border: 1px solid #d9d9d9;
+        border-radius: 14px;
+        padding: 1rem 1.2rem 0.85rem 1.2rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .title {
         text-align:center;
         color:#071B4D;
         font-weight:900;
-        font-size:2.15rem;
-        line-height:1.05;
+        font-size:2rem;
+        line-height:1.15;
+        margin:0;
+        padding:0;
     }
     .subtitle {
         text-align:center;
         color:#555;
         font-style:italic;
-        margin-bottom:1rem;
+        font-size:1rem;
+        margin-top:0.35rem;
+        margin-bottom:0;
     }
     .header-box {
         color:white;
@@ -306,8 +319,15 @@ def show_panel(title, subtitle, color, default_smbs, default_cuso4, key, note_ty
 # =========================
 # APP
 # =========================
-st.markdown("<div class='title'>MASS BALANCE TRANSLATION: FROM LABORATORY OPTIMIZATION TO PLANT OPERATION</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Validation of reagent efficiency based on real plant data | Effective operating hours: 6908.3 h | Slurry flow rate: 1950 m³/h</div>", unsafe_allow_html=True)
+st.markdown(
+    '''
+    <div class="title-card">
+        <div class="title">MASS BALANCE TRANSLATION: FROM LABORATORY OPTIMIZATION TO PLANT OPERATION</div>
+        <div class="subtitle">Validation of reagent efficiency based on real plant data | Effective operating hours: 6908.3 h | Slurry flow rate: 1950 m³/h</div>
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
 
 with st.expander("Constants and uncertainty rules used in this dashboard"):
     constants = pd.DataFrame({
