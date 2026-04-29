@@ -155,6 +155,42 @@ st.markdown(
         line-height:1;
         margin-bottom:0.25rem;
     }
+    .flow-arrow-wrap {
+        height: 48px;
+        margin-top: -4px;
+        margin-bottom: 4px;
+    }
+    .flow-arrow-svg {
+        width: 100%;
+        height: 48px;
+        overflow: visible;
+    }
+    .flow-arrow-path-smbs {
+        fill: none;
+        stroke: #0B6B2B;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-dasharray: 12 10;
+        animation: flowDash 1.2s linear infinite;
+    }
+    .flow-arrow-path-cuso4 {
+        fill: none;
+        stroke: #D55E00;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-dasharray: 12 10;
+        animation: flowDash 1.2s linear infinite;
+    }
+    .flow-arrow-head-smbs {
+        fill: #0B6B2B;
+    }
+    .flow-arrow-head-cuso4 {
+        fill: #D55E00;
+    }
+    @keyframes flowDash {
+        from { stroke-dashoffset: 22; }
+        to { stroke-dashoffset: 0; }
+    }
     .detox {
         border:2px solid #666;
         border-radius:18px;
@@ -313,7 +349,22 @@ def dose_pills(smbs, cuso4, main_color, note_type, r):
             {smbs:.1f} mg/L<br>
             ({r['smbs_kgh']:.1f} kg/h)
             """
-        st.markdown(f"<div class='dose-box' style='background:{main_color};'>{text}</div><div class='dose-arrow'>↓</div>", unsafe_allow_html=True)
+        st.markdown(
+            f'''
+            <div class='dose-box' style='background:{main_color};'>{text}</div>
+            <div class='flow-arrow-wrap'>
+                <svg class='flow-arrow-svg' viewBox='0 0 220 60'>
+                    <defs>
+                        <marker id='arrowhead-smbs' markerWidth='10' markerHeight='10' refX='8' refY='3' orient='auto'>
+                            <polygon points='0 0, 8 3, 0 6' class='flow-arrow-head-smbs'/>
+                        </marker>
+                    </defs>
+                    <path class='flow-arrow-path-smbs' d='M70 5 C95 25, 125 38, 155 50' marker-end='url(#arrowhead-smbs)'/>
+                </svg>
+            </div>
+            ''',
+            unsafe_allow_html=True
+        )
 
     with b:
         if note_type == "pump":
@@ -336,7 +387,22 @@ def dose_pills(smbs, cuso4, main_color, note_type, r):
             {cuso4:.1f} mg/L<br>
             ({r['cuso4_kgh']:.1f} kg/h)
             """
-        st.markdown(f"<div class='dose-box' style='background:{COLORS['orange']};'>{text}</div><div class='dose-arrow'>↓</div>", unsafe_allow_html=True)
+        st.markdown(
+            f'''
+            <div class='dose-box' style='background:{COLORS['orange']};'>{text}</div>
+            <div class='flow-arrow-wrap'>
+                <svg class='flow-arrow-svg' viewBox='0 0 220 60'>
+                    <defs>
+                        <marker id='arrowhead-cuso4' markerWidth='10' markerHeight='10' refX='8' refY='3' orient='auto'>
+                            <polygon points='0 0, 8 3, 0 6' class='flow-arrow-head-cuso4'/>
+                        </marker>
+                    </defs>
+                    <path class='flow-arrow-path-cuso4' d='M150 5 C125 25, 95 38, 65 50' marker-end='url(#arrowhead-cuso4)'/>
+                </svg>
+            </div>
+            ''',
+            unsafe_allow_html=True
+        )
 
 def process_visual():
     a, b, c = st.columns([1, 1.5, 1])
