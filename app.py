@@ -253,6 +253,33 @@ st.markdown(
     div[data-testid="stMetricValue"] {
         font-size:1.15rem;
     }
+
+    /* =========================
+       STRONG BORDERS FOR ONLY THE THREE MAIN INFOGRAPHIC PANELS
+       This targets Streamlit bordered containers that contain the colored header-box.
+       It keeps all existing dashboard sections intact.
+       ========================= */
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box) {
+        border-width: 5px !important;
+        border-radius: 18px !important;
+        box-shadow:
+            0 8px 24px rgba(0,0,0,0.22),
+            0 0 0 2px rgba(255,255,255,0.75) inset !important;
+        background: rgba(255,255,255,0.96) !important;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#0B6B2B"]) {
+        border-color: #0B6B2B !important;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#064A9B"]) {
+        border-color: #064A9B !important;
+    }
+
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#5A168D"]) {
+        border-color: #5A168D !important;
+    }
+
     </style>
     """,
     unsafe_allow_html=True,
