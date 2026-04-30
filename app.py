@@ -668,7 +668,6 @@ with c3:
             },
             title={"text": "<b>Treated WADCN vs 0.5 ppm Target</b>"},
             number={"font": {"size": 42, "color": "#071B4D"}},
-            delta={"reference": WADCN_TARGET, "increasing": {"color": "#FF3B30"}, "decreasing": {"color": "#20C997"}},
         ))
         fig_gauge.update_layout(
             height=285,
