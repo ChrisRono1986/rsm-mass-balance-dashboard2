@@ -211,11 +211,12 @@ st.markdown(
     }
     .compliance {
         border-radius:8px;
-        background:#178A3B;
+        background:linear-gradient(135deg, #00B050, #20C997);
         color:white;
         padding:0.55rem;
         text-align:center;
         font-weight:900;
+        box-shadow: 0 2px 8px rgba(0,176,80,0.30);
     }
     .note {
         border:1px dashed #999;
@@ -655,16 +656,38 @@ with c3:
                 "axis": {"range": [0, 2.0]},
                 "bar": {"color": COLORS["purple"]},
                 "steps": [
-                    {"range": [0, WADCN_TARGET], "color": "#DFF3E3"},
-                    {"range": [WADCN_TARGET, 1.0], "color": "#FFF1CC"},
-                    {"range": [1.0, 2.0], "color": "#FAD4D8"},
+                    {"range": [0, WADCN_TARGET], "color": "#20C997"},
+                    {"range": [WADCN_TARGET, 1.0], "color": "#FFC107"},
+                    {"range": [1.0, 2.0], "color": "#FF3B30"},
                 ],
-                "threshold": {"line": {"color": "red", "width": 4}, "thickness": 0.75, "value": WADCN_TARGET},
+                "threshold": {
+                    "line": {"color": "#8B0000", "width": 6},
+                    "thickness": 0.9,
+                    "value": WADCN_TARGET
+                },
             },
-            title={"text": "Treated WADCN vs 0.5 ppm Target"},
+            title={"text": "<b>Treated WADCN vs 0.5 ppm Target</b>"},
+            number={"font": {"size": 42, "color": "#071B4D"}},
+            delta={"reference": WADCN_TARGET, "increasing": {"color": "#FF3B30"}, "decreasing": {"color": "#20C997"}},
         ))
-        fig_gauge.update_layout(height=260, margin=dict(l=20, r=20, t=50, b=10))
+        fig_gauge.update_layout(
+            height=285,
+            margin=dict(l=20, r=20, t=60, b=10),
+            paper_bgcolor="rgba(255,255,255,0)",
+            plot_bgcolor="rgba(255,255,255,0)",
+            font=dict(color="#071B4D", size=14)
+        )
         st.plotly_chart(fig_gauge, use_container_width=True)
+        st.markdown(
+            """
+            <div style="display:flex; gap:0.35rem; justify-content:center; margin-top:-0.4rem; margin-bottom:0.4rem;">
+                <div style="background:#20C997; color:white; padding:0.25rem 0.45rem; border-radius:6px; font-size:0.78rem; font-weight:800;">SAFE ≤0.5</div>
+                <div style="background:#FFC107; color:#111; padding:0.25rem 0.45rem; border-radius:6px; font-size:0.78rem; font-weight:800;">CAUTION 0.5–1.0</div>
+                <div style="background:#FF3B30; color:white; padding:0.25rem 0.45rem; border-radius:6px; font-size:0.78rem; font-weight:800;">ACTION >1.0</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
         if wadcn <= WADCN_TARGET:
             st.success("Compliant with internal target (≤ 0.5 ppm).")
         else:
