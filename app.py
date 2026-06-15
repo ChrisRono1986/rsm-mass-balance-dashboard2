@@ -260,24 +260,24 @@ st.markdown(
        It keeps all existing dashboard sections intact.
        ========================= */
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box) {
-        border-width: 5px !important;
-        border-radius: 18px !important;
+        border-width: 9px !important;
+        border-radius: 22px !important;
         box-shadow:
-            0 8px 24px rgba(0,0,0,0.22),
-            0 0 0 2px rgba(255,255,255,0.75) inset !important;
+            0 10px 28px rgba(0,0,0,0.32),
+            0 0 0 3px rgba(255,255,255,0.85) inset !important;
         background: rgba(255,255,255,0.96) !important;
     }
 
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#0B6B2B"]) {
-        border-color: #0B6B2B !important;
+        border-color: #008C3A !important;
     }
 
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#064A9B"]) {
-        border-color: #064A9B !important;
+        border-color: #006FE6 !important;
     }
 
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#5A168D"]) {
-        border-color: #5A168D !important;
+        border-color: #8A2BE2 !important;
     }
 
     </style>
