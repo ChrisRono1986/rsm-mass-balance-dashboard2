@@ -280,6 +280,30 @@ st.markdown(
         border-color: #8A2BE2 !important;
     }
 
+
+    /* =========================
+       READABLE EXPANDER TEXT
+       Makes "Constants and uncertainty rules used in this dashboard" black
+       and prevents white-on-white text in expander sections.
+       ========================= */
+    div[data-testid="stExpander"] details summary,
+    div[data-testid="stExpander"] details summary p,
+    div[data-testid="stExpander"] p,
+    div[data-testid="stExpander"] label,
+    div[data-testid="stExpander"] span,
+    div[data-testid="stExpander"] div {
+        color: #000000 !important;
+    }
+
+    div[data-testid="stExpander"] {
+        background: rgba(255,255,255,0.96) !important;
+        border-radius: 10px !important;
+    }
+
+    div[data-testid="stExpander"] details summary p {
+        font-weight: 800 !important;
+    }
+
     </style>
     """,
     unsafe_allow_html=True,
