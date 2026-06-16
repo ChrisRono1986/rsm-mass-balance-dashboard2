@@ -304,6 +304,78 @@ st.markdown(
         font-weight: 800 !important;
     }
 
+
+    /* =========================
+       FORCE READABLE BLACK TEXT IN MAIN DASHBOARD BODY
+       Applies to labels, sliders, markdown text, notes, zone boxes, metrics,
+       captions, dataframes and bordered containers. Header boxes and dose boxes
+       stay white for contrast.
+       ========================= */
+
+    /* General Streamlit labels/text in the dashboard body */
+    .stMarkdown,
+    .stMarkdown p,
+    .stMarkdown span,
+    .stCaptionContainer,
+    .stCaptionContainer p,
+    label,
+    div[data-testid="stMarkdownContainer"],
+    div[data-testid="stMarkdownContainer"] p,
+    div[data-testid="stMarkdownContainer"] span,
+    div[data-testid="stWidgetLabel"],
+    div[data-testid="stWidgetLabel"] p,
+    div[data-testid="stWidgetLabel"] label {
+        color: #000000 !important;
+    }
+
+    /* Metrics such as Lower / Conservative and dollar values */
+    div[data-testid="stMetric"],
+    div[data-testid="stMetric"] label,
+    div[data-testid="stMetric"] div,
+    div[data-testid="stMetricLabel"],
+    div[data-testid="stMetricLabel"] p,
+    div[data-testid="stMetricValue"],
+    div[data-testid="stMetricValue"] div {
+        color: #000000 !important;
+    }
+
+    /* Zone boxes */
+    .zone-optimal,
+    .zone-optimal span,
+    .zone-warning,
+    .zone-warning span,
+    .zone-overdose,
+    .zone-overdose span {
+        color: #000000 !important;
+    }
+
+    /* Flow/process boxes */
+    .flow-box,
+    .detox,
+    .note,
+    .note span,
+    .note p {
+        color: #000000 !important;
+    }
+
+    /* Keep these colored elements white because they sit on dark backgrounds */
+    .header-box,
+    .header-box span,
+    .dose-box,
+    .dose-box b,
+    .dose-box span,
+    .compliance,
+    .compliance span,
+    .section-label[style*="color:white"],
+    .section-label[style*="color: white"] {
+        color: #FFFFFF !important;
+    }
+
+    /* Keep the red/green status messages readable with default contrast */
+    div[data-testid="stAlert"] * {
+        color: inherit !important;
+    }
+
     </style>
     """,
     unsafe_allow_html=True,
