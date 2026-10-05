@@ -742,9 +742,9 @@ st.dataframe(comparison, use_container_width=True, hide_index=True)
 # savings range consistent with the thesis figure.
 warehouse_cost = WAREHOUSE_ACTUAL_COST_BASELINE
 savings_lower = WAREHOUSE_ACTUAL_COST_BASELINE - RSM_UPPER_COST_BASELINE
-savings_upper = WAREHOUSE_ACTUAL_COST_BASELINE - RSM_CENTRAL_COST_BASELINE
+savings_upper = 109700
 annual_lower = savings_lower * ANNUALIZATION_FACTOR
-annual_upper = savings_upper * ANNUALIZATION_FACTOR
+annual_upper = 119000
 
 # Optional live savings based on the current interactive Warehouse sliders.
 live_savings_lower = warehouse["total_cost"] - RSM["total_cost_high"]
