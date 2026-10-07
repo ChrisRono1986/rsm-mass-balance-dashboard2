@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+# Public GitHub version: commercial prices and absolute cost values are not included.
+
 st.set_page_config(page_title="RSM Mass Balance Dashboard", page_icon="⚗️", layout="wide")
 
 # =========================
@@ -15,8 +17,7 @@ ANNUALIZATION_FACTOR = 12 / 11
 SMBS_STRENGTH_KG_M3 = 3600 / 70
 CUSO4_STRENGTH_KG_M3 = 2000 / 16
 
-SMBS_PRICE_KG = 489.76 / 1250
-CUSO4_PRICE_KG = 2790.24 / 1250
+# Commercial unit prices are intentionally excluded from this public version.
 
 PUMP_UNCERTAINTY = 0.10
 WADCN_TARGET = 0.5
@@ -28,12 +29,7 @@ RSM = {
     "cuso4_m3_low": 1308.155157, "cuso4_m3_central": 1317.045773, "cuso4_m3_high": 1326.497179,
     "smbs_tons_low": 1200.30917, "smbs_tons_central": 1206.966388, "smbs_tons_high": 1214.213764,
     "cuso4_tons_low": 163.5193946, "cuso4_tons_central": 164.6307217, "cuso4_tons_high": 165.8121474,
-    "smbs_cost_low": 470290.74, "smbs_cost_central": 472899.09, "smbs_cost_high": 475738.67,
-    "cuso4_cost_low": 365006.68, "cuso4_cost_central": 367487.38, "cuso4_cost_high": 370124.55,
 }
-RSM["total_cost_low"] = RSM["smbs_cost_low"] + RSM["cuso4_cost_low"]
-RSM["total_cost_central"] = RSM["smbs_cost_central"] + RSM["cuso4_cost_central"]
-RSM["total_cost_high"] = RSM["smbs_cost_high"] + RSM["cuso4_cost_high"]
 
 COLORS = {
     "green": "#0B6B2B",
@@ -54,12 +50,7 @@ DEFAULTS = {
     "rsm_cuso4": 12.2,
 }
 
-# Validated infographic/thesis baseline values for the headline savings range.
-# Lower savings = Warehouse actual cost - RSM upper-bound cost.
-# Upper savings = Warehouse actual cost - RSM central cost.
-WAREHOUSE_ACTUAL_COST_BASELINE = 945000.00
-RSM_CENTRAL_COST_BASELINE = 840386.47
-RSM_UPPER_COST_BASELINE = 845863.22
+# Absolute financial baselines are intentionally excluded from this public version.
 
 # =========================
 # CSS
@@ -384,8 +375,8 @@ st.markdown(
 # =========================
 # HELPERS
 # =========================
-def money(x):
-    return f"${x:,.0f}"
+def confidential_value():
+    return "████████"
 
 def num(x, d=1):
     return f"{x:,.{d}f}"
@@ -397,16 +388,12 @@ def calc_from_mgl(smbs_mgl, cuso4_mgl):
     cuso4_m3h = cuso4_kgh / CUSO4_STRENGTH_KG_M3
     smbs_tons = smbs_kgh * EFFECTIVE_HOURS_JAN_NOV / 1000
     cuso4_tons = cuso4_kgh * EFFECTIVE_HOURS_JAN_NOV / 1000
-    smbs_cost = smbs_tons * 1000 * SMBS_PRICE_KG
-    cuso4_cost = cuso4_tons * 1000 * CUSO4_PRICE_KG
     return {
         "smbs_mgl": smbs_mgl, "cuso4_mgl": cuso4_mgl,
         "smbs_kgh": smbs_kgh, "cuso4_kgh": cuso4_kgh,
         "smbs_m3h": smbs_m3h, "cuso4_m3h": cuso4_m3h,
         "smbs_tons": smbs_tons, "cuso4_tons": cuso4_tons,
         "total_tons": smbs_tons + cuso4_tons,
-        "smbs_cost": smbs_cost, "cuso4_cost": cuso4_cost,
-        "total_cost": smbs_cost + cuso4_cost,
     }
 
 def section_title(text, bg, fg="white"):
@@ -571,11 +558,10 @@ def tables(r, color, note_type):
         "Mass flow (kg/h avg.)": [round(r["smbs_kgh"], 1), round(r["cuso4_kgh"], 1), round(r["smbs_kgh"] + r["cuso4_kgh"], 1)],
     })
     st.dataframe(cons, use_container_width=True, hide_index=True)
-
-    section_title("COST SUMMARY (INDICATIVE)", "#F2F2F2", color)
+    section_title("COST SUMMARY", "#F2F2F2", color)
     costs = pd.DataFrame({
         "Item": ["SMBS cost", "CuSO₄ cost", "TOTAL COST"],
-        "Value": [money(r["smbs_cost"]), money(r["cuso4_cost"]), money(r["total_cost"])],
+        "Value": [confidential_value(), confidential_value(), "CONFIDENTIAL"],
     })
     st.dataframe(costs, use_container_width=True, hide_index=True)
 
@@ -640,8 +626,8 @@ with st.expander("Constants and uncertainty rules used in this dashboard"):
             f"{ANNUALIZATION_FACTOR:.4f}",
             f"{SMBS_STRENGTH_KG_M3:.2f} kg/m³",
             f"{CUSO4_STRENGTH_KG_M3:.2f} kg/m³",
-            f"${SMBS_PRICE_KG:.6f}/kg",
-            f"${CUSO4_PRICE_KG:.6f}/kg",
+            "CONFIDENTIAL",
+            "CONFIDENTIAL",
             "±10% applied only to actual dosing pumps",
             "±0.57 ppm applied only to RSM WADCN-feed recalculation",
             f"WADCN ≤ {WADCN_TARGET} ppm",
@@ -675,27 +661,24 @@ with col2:
 
     section_title("PUMP ±10% UNCERTAINTY", "#EAF2FF", COLORS["blue"])
     pump_unc = pd.DataFrame({
-        "Parameter": ["SMBS dosing", "CuSO₄ dosing", "SMBS kg/h", "CuSO₄ kg/h", "Total cost"],
+        "Parameter": ["SMBS dosing", "CuSO₄ dosing", "SMBS kg/h", "CuSO₄ kg/h"],
         "Lower": [
             f"{pumps['smbs_mgl']*0.9:.1f} mg/L",
             f"{pumps['cuso4_mgl']*0.9:.1f} mg/L",
             f"{pumps['smbs_kgh']*0.9:.1f} kg/h",
             f"{pumps['cuso4_kgh']*0.9:.1f} kg/h",
-            money(pumps["total_cost"]*0.9),
         ],
         "Central": [
             f"{pumps['smbs_mgl']:.1f} mg/L",
             f"{pumps['cuso4_mgl']:.1f} mg/L",
             f"{pumps['smbs_kgh']:.1f} kg/h",
             f"{pumps['cuso4_kgh']:.1f} kg/h",
-            money(pumps["total_cost"]),
         ],
         "Upper": [
             f"{pumps['smbs_mgl']*1.1:.1f} mg/L",
             f"{pumps['cuso4_mgl']*1.1:.1f} mg/L",
             f"{pumps['smbs_kgh']*1.1:.1f} kg/h",
             f"{pumps['cuso4_kgh']*1.1:.1f} kg/h",
-            money(pumps["total_cost"]*1.1),
         ],
     })
     st.dataframe(pump_unc, use_container_width=True, hide_index=True)
@@ -715,13 +698,13 @@ with col3:
 st.divider()
 section_title("FORMAL RSM UNCERTAINTY RESULTS: WADCN ±0.57 ppm APPLIED TO 8003 DATA POINTS", COLORS["purple"])
 rsm_unc = pd.DataFrame({
-    "Result": ["Average dosing (m³/h)", "Total consumption (m³)", "Total consumption (tons)", "Cost estimate (USD)"],
-    "SMBS lower": [RSM["smbs_m3h_low"], RSM["smbs_m3_low"], RSM["smbs_tons_low"], RSM["smbs_cost_low"]],
-    "SMBS central": [RSM["smbs_m3h_central"], RSM["smbs_m3_central"], RSM["smbs_tons_central"], RSM["smbs_cost_central"]],
-    "SMBS upper": [RSM["smbs_m3h_high"], RSM["smbs_m3_high"], RSM["smbs_tons_high"], RSM["smbs_cost_high"]],
-    "CuSO₄ lower": [RSM["cuso4_m3h_low"], RSM["cuso4_m3_low"], RSM["cuso4_tons_low"], RSM["cuso4_cost_low"]],
-    "CuSO₄ central": [RSM["cuso4_m3h_central"], RSM["cuso4_m3_central"], RSM["cuso4_tons_central"], RSM["cuso4_cost_central"]],
-    "CuSO₄ upper": [RSM["cuso4_m3h_high"], RSM["cuso4_m3_high"], RSM["cuso4_tons_high"], RSM["cuso4_cost_high"]],
+    "Result": ["Average dosing (m³/h)", "Total consumption (m³)", "Total consumption (tons)"],
+    "SMBS lower": [RSM["smbs_m3h_low"], RSM["smbs_m3_low"], RSM["smbs_tons_low"]],
+    "SMBS central": [RSM["smbs_m3h_central"], RSM["smbs_m3_central"], RSM["smbs_tons_central"]],
+    "SMBS upper": [RSM["smbs_m3h_high"], RSM["smbs_m3_high"], RSM["smbs_tons_high"]],
+    "CuSO₄ lower": [RSM["cuso4_m3h_low"], RSM["cuso4_m3_low"], RSM["cuso4_tons_low"]],
+    "CuSO₄ central": [RSM["cuso4_m3h_central"], RSM["cuso4_m3_central"], RSM["cuso4_tons_central"]],
+    "CuSO₄ upper": [RSM["cuso4_m3h_high"], RSM["cuso4_m3_high"], RSM["cuso4_tons_high"]],
 })
 st.dataframe(rsm_unc, use_container_width=True, hide_index=True)
 
@@ -737,35 +720,37 @@ comparison["Savings (tons)"] = comparison["Warehouse (tons)"] - comparison["RSM 
 comparison["Reduction (%)"] = comparison["Savings (tons)"] / comparison["Warehouse (tons)"] * 100
 st.dataframe(comparison, use_container_width=True, hide_index=True)
 
-# Headline savings are based on the validated infographic/thesis baseline,
-# not on the interactive Warehouse sliders. This keeps the formal reported
-# savings range consistent with the thesis figure.
-warehouse_cost = WAREHOUSE_ACTUAL_COST_BASELINE
-savings_lower = WAREHOUSE_ACTUAL_COST_BASELINE - RSM_UPPER_COST_BASELINE
-savings_upper = 109700
-annual_lower = savings_lower * ANNUALIZATION_FACTOR
-annual_upper = 119000
+# Public percentage-only savings metrics.
+# Percentages are calculated from reagent consumption, without prices or currency values.
+smbs_reduction_pct = (
+    (warehouse["smbs_tons"] - RSM["smbs_tons_central"])
+    / warehouse["smbs_tons"]
+) * 100
 
-# Optional live savings based on the current interactive Warehouse sliders.
-live_savings_lower = warehouse["total_cost"] - RSM["total_cost_high"]
-live_savings_upper = warehouse["total_cost"] - RSM["total_cost_central"]
-live_annual_lower = live_savings_lower * ANNUALIZATION_FACTOR
-live_annual_upper = live_savings_upper * ANNUALIZATION_FACTOR
+cuso4_reduction_pct = (
+    (warehouse["cuso4_tons"] - RSM["cuso4_tons_central"])
+    / warehouse["cuso4_tons"]
+) * 100
+
+total_reduction_pct = (
+    (warehouse["total_tons"] - (RSM["smbs_tons_central"] + RSM["cuso4_tons_central"]))
+    / warehouse["total_tons"]
+) * 100
 
 c1, c2, c3 = st.columns([1.1, 1.1, 1.4])
 
 with c1:
     with st.container(border=True):
-        section_title("COST SAVINGS RANGE (JAN–NOV 2025)", "#EAF5EA", COLORS["green"])
-        st.metric("Lower / Conservative", money(savings_lower))
-        st.metric("Upper / Central", money(savings_upper))
+        section_title("REAGENT REDUCTION (%)", "#EAF5EA", COLORS["green"])
+        st.metric("SMBS Reduction", f"{smbs_reduction_pct:.1f}%")
+        st.metric("CuSO₄ Reduction", f"{cuso4_reduction_pct:.1f}%")
 
 with c2:
     with st.container(border=True):
-        section_title("ANNUALIZED COST SAVINGS RANGE", "#EAF2FF", COLORS["blue"])
-        st.metric("Lower / Conservative", f"{money(annual_lower)} / year")
-        st.metric("Upper / Central", f"{money(annual_upper)} / year")
-        st.caption("Uses validated baseline: Warehouse actual cost $945,000.")
+        section_title("TOTAL REAGENT REDUCTION", "#EAF2FF", COLORS["blue"])
+        st.metric("Overall Reduction", f"{total_reduction_pct:.1f}%")
+        st.metric("Cost Data", "CONFIDENTIAL")
+        st.caption("Public version: absolute prices and currency savings are intentionally hidden.")
 
 with c3:
     with st.container(border=True):
@@ -815,26 +800,22 @@ with c3:
         else:
             st.error("Above internal target: operational action required.")
 
-# Optional live scenario if sliders are changed
-with st.expander("Optional: live savings if Warehouse sliders are adjusted"):
+# Optional live reduction summary if Warehouse sliders are changed
+with st.expander("Live Reduction Percentages"):
+    live_smbs_reduction_pct = (
+        (warehouse["smbs_tons"] - RSM["smbs_tons_central"])
+        / warehouse["smbs_tons"]
+    ) * 100
+    live_cuso4_reduction_pct = (
+        (warehouse["cuso4_tons"] - RSM["cuso4_tons_central"])
+        / warehouse["cuso4_tons"]
+    ) * 100
     live_df = pd.DataFrame({
-        "Scenario": [
-            "Live Warehouse cost from sliders",
-            "RSM upper-bound cost",
-            "RSM central cost",
-            "Live lower savings, Jan–Nov",
-            "Live upper savings, Jan–Nov",
-            "Live annualized lower",
-            "Live annualized upper",
-        ],
+        "Metric": ["SMBS Reduction", "CuSO₄ Reduction", "Cost Data"],
         "Value": [
-            money(warehouse["total_cost"]),
-            money(RSM["total_cost_high"]),
-            money(RSM["total_cost_central"]),
-            money(live_savings_lower),
-            money(live_savings_upper),
-            money(live_annual_lower),
-            money(live_annual_upper),
+            f"{live_smbs_reduction_pct:.1f}%",
+            f"{live_cuso4_reduction_pct:.1f}%",
+            "CONFIDENTIAL",
         ],
     })
     st.dataframe(live_df, use_container_width=True, hide_index=True)
@@ -846,7 +827,6 @@ chart_df = pd.DataFrame({
     "Method": ["Warehouse", "Pump central", "RSM central"],
     "SMBS tons": [warehouse["smbs_tons"], pumps["smbs_tons"], RSM["smbs_tons_central"]],
     "CuSO₄ tons": [warehouse["cuso4_tons"], pumps["cuso4_tons"], RSM["cuso4_tons_central"]],
-    "Total cost": [warehouse["total_cost"], pumps["total_cost"], RSM["total_cost_central"]],
 })
 with left:
     fig = go.Figure()
@@ -856,8 +836,24 @@ with left:
     st.plotly_chart(fig, use_container_width=True)
 with right:
     fig2 = go.Figure()
-    fig2.add_bar(x=chart_df["Method"], y=chart_df["Total cost"], name="Total cost")
-    fig2.update_layout(title="Total Reagent Cost", yaxis_title="USD", height=380)
+    fig2.add_bar(
+        x=["SMBS", "CuSO₄", "Overall"],
+        y=[smbs_reduction_pct, cuso4_reduction_pct, total_reduction_pct],
+        text=[
+            f"{smbs_reduction_pct:.1f}%",
+            f"{cuso4_reduction_pct:.1f}%",
+            f"{total_reduction_pct:.1f}%",
+        ],
+        textposition="outside",
+        marker_color=[COLORS["green"], COLORS["orange"], COLORS["blue"]],
+        name="Reduction",
+    )
+    fig2.update_layout(
+        title="Reagent Reduction Relative to Warehouse Baseline",
+        yaxis_title="Reduction (%)",
+        height=380,
+        showlegend=False,
+    )
     st.plotly_chart(fig2, use_container_width=True)
 
 # Final verdict
@@ -867,5 +863,5 @@ st.write(
     "The dashboard distinguishes between physical consumption records, pump-derived calculations, and model-based RSM predictions. "
     "Pump uncertainty is applied only to the pump-derived dataset, while WADCN analytical uncertainty is applied only to the RSM uncertainty evaluation. "
     "Warehouse data are treated as the physical consumption baseline. The optimized RSM dosing strategy reduces SMBS consumption while maintaining comparable CuSO₄ requirements and the WADCN compliance target. "
-    "Even under conservative uncertainty treatment, the savings range remains positive, supporting the RSM strategy as a technically robust and economically meaningful decision-support tool."
+    "The public dashboard reports percentage reductions while withholding commercial pricing and absolute savings. This preserves the technical comparison without disclosing confidential financial information."
 )
