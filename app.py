@@ -224,26 +224,33 @@ def show_panel(title,subtitle,color,default_smbs,default_cuso4,key,note_type):
 # =========================
 # APP
 # =========================
-st.markdown(f"""
-<div class="title-card">
-  <div class="mining-process-strip">
-    <div class="mining-step" title="Mining">⛏️</div><div class="mining-flow-arrow">➜</div>
-    <div class="mining-step" title="Ore haulage">🚛</div><div class="mining-flow-arrow">➜</div>
-    <div class="mining-step" title="Crushing and grinding">⚙️</div><div class="mining-flow-arrow">➜</div>
-    <div class="mining-step" title="Metallurgical processing">🏭</div><div class="mining-flow-arrow">➜</div>
-    <div class="mining-step" title="Laboratory optimization">⚗️</div><div class="mining-flow-arrow">➜</div>
-    <div class="mining-step" title="Detoxification">💧</div>
-  </div>
-  <div class="mining-kicker">Mining • Metallurgy • Detoxification • Optimization</div>
-  <div class="title">MASS BALANCE TRANSLATION:<br>FROM LABORATORY OPTIMIZATION TO PLANT OPERATION</div>
-  <div class="title-accent"></div>
-  <div class="subtitle">Validation of reagent efficiency based on real plant data</div>
-  <div class="title-data-row">
-    <div class="title-data-pill">🕒 Effective operating hours: <b>{EFFECTIVE_HOURS_JAN_NOV:,.1f} h</b></div>
-    <div class="title-data-pill">🌊 Slurry flow: <b>{SLURRY_FLOW_M3H:,.0f} m³/h</b></div>
-    <div class="title-data-pill">🎯 Internal WADCN target: <b>≤ {WADCN_TARGET:.1f} ppm</b></div>
-  </div>
-</div>""",unsafe_allow_html=True)
+truck_col, title_col = st.columns([1.15, 4.85], gap="medium")
+
+with truck_col:
+    st.markdown("<div style='height:0.35rem'></div>", unsafe_allow_html=True)
+    st.image("Haul truck.png", use_container_width=True)
+
+with title_col:
+    st.markdown(f"""
+    <div class="title-card">
+      <div class="mining-process-strip">
+        <div class="mining-step" title="Mining">⛏️</div><div class="mining-flow-arrow">➜</div>
+        <div class="mining-step" title="Ore haulage">🚛</div><div class="mining-flow-arrow">➜</div>
+        <div class="mining-step" title="Crushing and grinding">⚙️</div><div class="mining-flow-arrow">➜</div>
+        <div class="mining-step" title="Metallurgical processing">🏭</div><div class="mining-flow-arrow">➜</div>
+        <div class="mining-step" title="Laboratory optimization">⚗️</div><div class="mining-flow-arrow">➜</div>
+        <div class="mining-step" title="Detoxification">💧</div>
+      </div>
+      <div class="mining-kicker">Mining • Metallurgy • Detoxification • Optimization</div>
+      <div class="title">MASS BALANCE TRANSLATION:<br>FROM LABORATORY OPTIMIZATION TO PLANT OPERATION</div>
+      <div class="title-accent"></div>
+      <div class="subtitle">Validation of reagent efficiency based on real plant data</div>
+      <div class="title-data-row">
+        <div class="title-data-pill">🕒 Effective operating hours: <b>{EFFECTIVE_HOURS_JAN_NOV:,.1f} h</b></div>
+        <div class="title-data-pill">🌊 Slurry flow: <b>{SLURRY_FLOW_M3H:,.0f} m³/h</b></div>
+        <div class="title-data-pill">🎯 Internal WADCN target: <b>≤ {WADCN_TARGET:.1f} ppm</b></div>
+      </div>
+    </div>""",unsafe_allow_html=True)
 
 with st.expander("Constants and uncertainty rules used in this dashboard"):
     constants=pd.DataFrame({"Parameter":["Slurry flow rate","Annual mill uptime 2025","Effective operating hours Jan–Nov","Annualization factor","SMBS stock solution strength","CuSO₄ stock solution strength","SMBS price","CuSO₄ price","Pump uncertainty","WADCN DETOXFEED expanded uncertainty","Internal WADCN target"],"Value":[f"{SLURRY_FLOW_M3H:,.0f} m³/h",f"{ANNUAL_UPTIME_H:,.2f} h",f"{EFFECTIVE_HOURS_JAN_NOV:,.1f} h",f"{ANNUALIZATION_FACTOR:.4f}",f"{SMBS_STRENGTH_KG_M3:.2f} kg/m³",f"{CUSO4_STRENGTH_KG_M3:.2f} kg/m³","CONFIDENTIAL","CONFIDENTIAL","±10% applied only to actual dosing pumps","±0.57 ppm applied only to RSM WADCN-feed recalculation",f"WADCN ≤ {WADCN_TARGET} ppm"]})
