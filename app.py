@@ -59,10 +59,19 @@ st.markdown(
         padding-left: 1.25rem;
         padding-right: 1.25rem;
         max-width: 98%;
-        background: rgba(255,255,255,0.94);
-        border: 1px solid rgba(212,175,55,0.45);
+
+        /* Contourmap.png is visible across the main dashboard surface. */
+        background-image:
+            linear-gradient(rgba(255,255,255,0.78), rgba(255,255,255,0.78)),
+            url("Contourmap.png");
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-attachment: local;
+
+        border: 1px solid rgba(212,175,55,0.55);
         border-radius: 24px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 24px rgba(212,175,55,0.12);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 24px rgba(212,175,55,0.16);
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
