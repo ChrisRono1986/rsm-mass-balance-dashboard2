@@ -65,8 +65,8 @@ def add_contour_background(fig, opacity=0.22):
             )
         )
     fig.update_layout(
-        paper_bgcolor="rgba(255,255,255,0.72)",
-        plot_bgcolor="rgba(255,255,255,0.58)",
+        paper_bgcolor="rgba(255,255,255,0.88)",
+        plot_bgcolor="rgba(255,255,255,0.82)",
     )
     return fig
 
@@ -91,7 +91,7 @@ dashboard_css = """
         padding-right: 1.25rem;
         max-width: 98%;
         background-image:
-            linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.72)),
+            linear-gradient(rgba(255,255,255,0.90), rgba(255,255,255,0.90)),
             url("__CONTOUR_BG__");
         background-size: cover;
         background-position: center top;
@@ -105,14 +105,14 @@ dashboard_css = """
     /* Contour map backgrounds for dashboard sections */
     div[data-testid="stVerticalBlockBorderWrapper"] {
         background-image:
-            linear-gradient(rgba(255,255,255,0.76), rgba(255,255,255,0.76)),
+            linear-gradient(rgba(255,255,255,0.90), rgba(255,255,255,0.90)),
             url("__CONTOUR_BG__") !important;
         background-size: cover !important;
         background-position: center !important;
     }
     div[data-testid="stDataFrame"] {
         background-image:
-            linear-gradient(rgba(255,255,255,0.80), rgba(255,255,255,0.80)),
+            linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)),
             url("__CONTOUR_BG__") !important;
         background-size: cover !important;
         border-radius: 8px;
@@ -120,7 +120,7 @@ dashboard_css = """
     }
     div[data-testid="stPlotlyChart"] {
         background-image:
-            linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.72)),
+            linear-gradient(rgba(255,255,255,0.90), rgba(255,255,255,0.90)),
             url("__CONTOUR_BG__") !important;
         background-size: cover !important;
         background-position: center !important;
@@ -130,7 +130,7 @@ dashboard_css = """
     }
     .section-label {
         background-image:
-            linear-gradient(rgba(255,255,255,0.18), rgba(255,255,255,0.18)),
+            linear-gradient(rgba(255,255,255,0.58), rgba(255,255,255,0.58)),
             url("__CONTOUR_BG__") !important;
         background-size: cover !important;
         background-blend-mode: soft-light;
@@ -364,7 +364,7 @@ with c3:
         wadcn=st.slider("Illustrative treated WADCN result (ppm)",0.0,2.0,0.45,0.01)
         fig_gauge=go.Figure(go.Indicator(mode="gauge+number+delta",value=wadcn,delta={"reference":WADCN_TARGET,"increasing":{"color":COLORS['red']},"decreasing":{"color":COLORS['green']}},gauge={"axis":{"range":[0,2.0]},"bar":{"color":COLORS['purple']},"steps":[{"range":[0,WADCN_TARGET],"color":"#20C997"},{"range":[WADCN_TARGET,1.0],"color":"#FFC107"},{"range":[1.0,2.0],"color":"#FF3B30"}],"threshold":{"line":{"color":"#8B0000","width":6},"thickness":.9,"value":WADCN_TARGET}},title={"text":"<b>Treated WADCN vs 0.5 ppm Target</b>"},number={"font":{"size":42,"color":"#071B4D"}}))
         fig_gauge.update_layout(height=285,margin=dict(l=20,r=20,t=60,b=10),paper_bgcolor="rgba(255,255,255,0)",plot_bgcolor="rgba(255,255,255,0)",font=dict(color="#071B4D",size=14))
-        add_contour_background(fig_gauge, opacity=0.24)
+        add_contour_background(fig_gauge, opacity=0.10)
         st.plotly_chart(fig_gauge,use_container_width=True)
 
 with st.expander("Live Reduction Percentages"):
@@ -374,9 +374,9 @@ with st.expander("Live Reduction Percentages"):
 st.divider(); left,right=st.columns(2)
 chart_df=pd.DataFrame({"Method":["Warehouse","Pump central","RSM central"],"SMBS tons":[warehouse['smbs_tons'],pumps['smbs_tons'],RSM['smbs_tons_central']],"CuSO₄ tons":[warehouse['cuso4_tons'],pumps['cuso4_tons'],RSM['cuso4_tons_central']]})
 with left:
-    fig=go.Figure(); fig.add_bar(x=chart_df['Method'],y=chart_df['SMBS tons'],name='SMBS'); fig.add_bar(x=chart_df['Method'],y=chart_df['CuSO₄ tons'],name='CuSO₄'); fig.update_layout(title='Total Reagent Consumption',barmode='group',yaxis_title='tons',height=380); add_contour_background(fig, opacity=0.24); st.plotly_chart(fig,use_container_width=True)
+    fig=go.Figure(); fig.add_bar(x=chart_df['Method'],y=chart_df['SMBS tons'],name='SMBS'); fig.add_bar(x=chart_df['Method'],y=chart_df['CuSO₄ tons'],name='CuSO₄'); fig.update_layout(title='Total Reagent Consumption',barmode='group',yaxis_title='tons',height=380); add_contour_background(fig, opacity=0.10); st.plotly_chart(fig,use_container_width=True)
 with right:
-    fig2=go.Figure(); fig2.add_bar(x=['SMBS','CuSO₄','Overall'],y=[smbs_reduction_pct,cuso4_reduction_pct,total_reduction_pct],text=[f"{smbs_reduction_pct:.1f}%",f"{cuso4_reduction_pct:.1f}%",f"{total_reduction_pct:.1f}%"],textposition='outside',marker_color=[COLORS['green'],COLORS['orange'],COLORS['blue']],name='Reduction'); fig2.update_layout(title='Reagent Reduction Relative to Warehouse Baseline',yaxis_title='Reduction (%)',height=380,showlegend=False); add_contour_background(fig2, opacity=0.24); st.plotly_chart(fig2,use_container_width=True)
+    fig2=go.Figure(); fig2.add_bar(x=['SMBS','CuSO₄','Overall'],y=[smbs_reduction_pct,cuso4_reduction_pct,total_reduction_pct],text=[f"{smbs_reduction_pct:.1f}%",f"{cuso4_reduction_pct:.1f}%",f"{total_reduction_pct:.1f}%"],textposition='outside',marker_color=[COLORS['green'],COLORS['orange'],COLORS['blue']],name='Reduction'); fig2.update_layout(title='Reagent Reduction Relative to Warehouse Baseline',yaxis_title='Reduction (%)',height=380,showlegend=False); add_contour_background(fig2, opacity=0.10); st.plotly_chart(fig2,use_container_width=True)
 
 st.divider(); section_title("FINAL VERDICT",COLORS['navy'])
 st.write("The dashboard distinguishes between physical consumption records, pump-derived calculations, and model-based RSM predictions. Pump uncertainty is applied only to the pump-derived dataset, while WADCN analytical uncertainty is applied only to the RSM uncertainty evaluation. Warehouse data are treated as the physical consumption baseline. The optimized RSM dosing strategy reduces SMBS consumption while maintaining comparable CuSO₄ requirements and the WADCN compliance target. The public dashboard reports percentage reductions while withholding commercial pricing and absolute savings. This preserves the technical comparison without disclosing confidential financial information.")
