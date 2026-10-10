@@ -43,49 +43,23 @@ DEFAULTS = {
 st.markdown(
     """
     <style>
-    .stApp {  
+    .stApp {
         background:
-            repeating-radial-gradient(
-                circle at center,
-                transparent 0px,
-                transparent 28px,
-                rgba(255,215,0,0.08) 30px,
-                transparent 32px,
-                transparent 58px
-            ),
-            repeating-radial-gradient(
-                circle at center,
-                transparent 0px,
-                transparent 56px,
-                rgba(212,175,55,0.06) 58px,
-                transparent 60px,
-                transparent 110px
-            ),
-            repeating-radial-gradient(
-                circle at center,
-                transparent 0px,
-                transparent 90px,
-                rgba(255,223,90,0.05) 92px,
-                transparent 95px,
-                transparent 170px
-            ),
-            linear-gradient(
-                135deg,
-                #141414 0%,
-                #1C1C1C 25%,
-                #2D2A24 50%,
-                #3A3327 75%,
-                #4A402E 100%
-            );
+            linear-gradient(rgba(20,20,20,0.55), rgba(20,20,20,0.55)),
+            url("Contourmap.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         background-attachment: fixed;
     }
+
     .block-container {
         padding-top: 2.4rem;
         padding-bottom: 1rem;
         padding-left: 1.25rem;
         padding-right: 1.25rem;
         max-width: 98%;
-        background: rgba(255,255,255,0.95);
+        background: rgba(255,255,255,0.94);
         border: 1px solid rgba(212,175,55,0.45);
         border-radius: 24px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 24px rgba(212,175,55,0.12);
