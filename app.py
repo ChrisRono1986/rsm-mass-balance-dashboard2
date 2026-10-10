@@ -44,14 +44,27 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color:#dff3ff;
-        background-image:
-            repeating-radial-gradient(ellipse at 18% 28%,transparent 0,transparent 34px,rgba(6,74,155,.12) 35px,transparent 37px),
-            repeating-radial-gradient(ellipse at 78% 16%,transparent 0,transparent 42px,rgba(6,74,155,.10) 43px,transparent 46px),
-            linear-gradient(180deg,rgba(223,243,255,.96),rgba(235,248,255,.96));
-        background-attachment:fixed;
+        background:
+            radial-gradient(circle at 15% 20%, rgba(255,215,0,0.18), transparent 22%),
+            radial-gradient(circle at 85% 30%, rgba(212,175,55,0.15), transparent 25%),
+            radial-gradient(circle at 40% 80%, rgba(255,223,90,0.12), transparent 28%),
+            repeating-linear-gradient(135deg, rgba(255,215,0,0.02) 0px, rgba(255,215,0,0.02) 8px, transparent 8px, transparent 16px),
+            linear-gradient(135deg, #141414 0%, #1C1C1C 25%, #2D2A24 50%, #3A3327 75%, #4A402E 100%);
+        background-attachment: fixed;
     }
-    .block-container {padding-top:2.4rem;padding-bottom:1rem;max-width:98%;}
+    .block-container {
+        padding-top: 2.4rem;
+        padding-bottom: 1rem;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+        max-width: 98%;
+        background: rgba(255,255,255,0.95);
+        border: 1px solid rgba(212,175,55,0.45);
+        border-radius: 24px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 24px rgba(212,175,55,0.12);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
     /* Mining-themed hero banner */
     .title-card {
