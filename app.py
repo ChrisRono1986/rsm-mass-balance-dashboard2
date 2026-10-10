@@ -275,8 +275,6 @@ with c3:
         fig_gauge=go.Figure(go.Indicator(mode="gauge+number+delta",value=wadcn,delta={"reference":WADCN_TARGET,"increasing":{"color":COLORS['red']},"decreasing":{"color":COLORS['green']}},gauge={"axis":{"range":[0,2.0]},"bar":{"color":COLORS['purple']},"steps":[{"range":[0,WADCN_TARGET],"color":"#20C997"},{"range":[WADCN_TARGET,1.0],"color":"#FFC107"},{"range":[1.0,2.0],"color":"#FF3B30"}],"threshold":{"line":{"color":"#8B0000","width":6},"thickness":.9,"value":WADCN_TARGET}},title={"text":"<b>Treated WADCN vs 0.5 ppm Target</b>"},number={"font":{"size":42,"color":"#071B4D"}}))
         fig_gauge.update_layout(height=285,margin=dict(l=20,r=20,t=60,b=10),paper_bgcolor="rgba(255,255,255,0)",plot_bgcolor="rgba(255,255,255,0)",font=dict(color="#071B4D",size=14))
         st.plotly_chart(fig_gauge,use_container_width=True)
-        st.markdown("<div style='display:flex;gap:.35rem;justify-content:center;margin-top:-.4rem;margin-bottom:.4rem'><div style='background:#20C997;color:white;padding:.25rem .45rem;border-radius:6px;font-size:.78rem;font-weight:800'>SAFE ≤0.5</div><div style='background:#FFC107;color:#111;padding:.25rem .45rem;border-radius:6px;font-size:.78rem;font-weight:800'>CAUTION 0.5–1.0</div><div style='background:#FF3B30;color:white;padding:.25rem .45rem;border-radius:6px;font-size:.78rem;font-weight:800'>ACTION &gt;1.0</div></div>",unsafe_allow_html=True)
-        st.success("Compliant with internal target (≤ 0.5 ppm).") if wadcn<=WADCN_TARGET else st.error("Above internal target: operational action required.")
 
 with st.expander("Live Reduction Percentages"):
     live_df=pd.DataFrame({"Metric":["SMBS Reduction","CuSO₄ Reduction","Cost Data"],"Value":[f"{smbs_reduction_pct:.1f}%",f"{cuso4_reduction_pct:.1f}%","CONFIDENTIAL"]})
