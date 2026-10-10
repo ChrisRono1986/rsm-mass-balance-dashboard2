@@ -380,3 +380,17 @@ with right:
 
 st.divider(); section_title("FINAL VERDICT",COLORS['navy'])
 st.write("The dashboard distinguishes between physical consumption records, pump-derived calculations, and model-based RSM predictions. Pump uncertainty is applied only to the pump-derived dataset, while WADCN analytical uncertainty is applied only to the RSM uncertainty evaluation. Warehouse data are treated as the physical consumption baseline. The optimized RSM dosing strategy reduces SMBS consumption while maintaining comparable CuSO₄ requirements and the WADCN compliance target. The public dashboard reports percentage reductions while withholding commercial pricing and absolute savings. This preserves the technical comparison without disclosing confidential financial information.")
+
+# =========================
+# NEWMONT MERIAN MINE VIDEO
+# =========================
+st.divider()
+section_title("NEWMONT MERIAN MINE VIDEO", COLORS["navy"])
+st.markdown(
+    "Explore available YouTube videos about Newmont Merian Mine using the link below."
+)
+st.link_button(
+    "▶ Open Newmont Merian Mine videos on YouTube",
+    "https://www.youtube.com/results?search_query=newmont+Merian+mine",
+    use_container_width=True,
+)
