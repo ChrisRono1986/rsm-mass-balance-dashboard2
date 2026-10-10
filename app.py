@@ -85,10 +85,55 @@ st.markdown(
         padding-left: 1.25rem;
         padding-right: 1.25rem;
         max-width: 98%;
-        background: rgba(255,255,255,0.95);
-        border: 1px solid rgba(212,175,55,0.45);
+
+        /* Geological contour map drawn inside the dashboard surface */
+        background:
+            repeating-radial-gradient(
+                ellipse at 8% 12%,
+                transparent 0px,
+                transparent 25px,
+                rgba(128, 92, 18, 0.18) 27px,
+                transparent 30px,
+                transparent 52px
+            ),
+            repeating-radial-gradient(
+                ellipse at 82% 18%,
+                transparent 0px,
+                transparent 38px,
+                rgba(158, 116, 25, 0.15) 40px,
+                transparent 43px,
+                transparent 72px
+            ),
+            repeating-radial-gradient(
+                ellipse at 25% 62%,
+                transparent 0px,
+                transparent 54px,
+                rgba(184, 134, 11, 0.13) 56px,
+                transparent 59px,
+                transparent 94px
+            ),
+            repeating-radial-gradient(
+                ellipse at 72% 78%,
+                transparent 0px,
+                transparent 70px,
+                rgba(128, 92, 18, 0.11) 72px,
+                transparent 75px,
+                transparent 118px
+            ),
+            repeating-radial-gradient(
+                ellipse at 48% 42%,
+                transparent 0px,
+                transparent 86px,
+                rgba(169, 125, 28, 0.09) 88px,
+                transparent 91px,
+                transparent 145px
+            ),
+            linear-gradient(rgba(255,255,255,0.91), rgba(255,255,255,0.91));
+
+        background-attachment: local;
+        border: 1px solid rgba(212,175,55,0.55);
         border-radius: 24px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 24px rgba(212,175,55,0.12);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 24px rgba(212,175,55,0.16);
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
