@@ -43,49 +43,41 @@ DEFAULTS = {
 st.markdown(
     """
     <style>
-    .stApp {
+    .stApp {  
         background:
-            /* Clearly visible faded topographic contour lines */
             repeating-radial-gradient(
-                ellipse at 10% 18%,
+                circle at center,
                 transparent 0px,
-                transparent 30px,
-                rgba(255, 215, 0, 0.20) 32px,
-                transparent 35px,
-                transparent 61px
+                transparent 28px,
+                rgba(255,215,0,0.08) 30px,
+                transparent 32px,
+                transparent 58px
             ),
             repeating-radial-gradient(
-                ellipse at 92% 25%,
+                circle at center,
                 transparent 0px,
-                transparent 42px,
-                rgba(244, 207, 87, 0.17) 44px,
-                transparent 47px,
-                transparent 78px
-            ),
-            repeating-radial-gradient(
-                ellipse at 68% 78%,
-                transparent 0px,
-                transparent 55px,
-                rgba(212, 175, 55, 0.15) 57px,
+                transparent 56px,
+                rgba(212,175,55,0.06) 58px,
                 transparent 60px,
-                transparent 98px
+                transparent 110px
             ),
             repeating-radial-gradient(
-                ellipse at 28% 72%,
+                circle at center,
                 transparent 0px,
-                transparent 70px,
-                rgba(255, 225, 120, 0.12) 72px,
-                transparent 75px,
-                transparent 120px
+                transparent 90px,
+                rgba(255,223,90,0.05) 92px,
+                transparent 95px,
+                transparent 170px
             ),
-            /* Gold light effects */
-            radial-gradient(circle at 15% 20%, rgba(255,215,0,0.18), transparent 22%),
-            radial-gradient(circle at 85% 30%, rgba(212,175,55,0.15), transparent 25%),
-            radial-gradient(circle at 40% 80%, rgba(255,223,90,0.12), transparent 28%),
-            repeating-linear-gradient(135deg, rgba(255,215,0,0.02) 0px, rgba(255,215,0,0.02) 8px, transparent 8px, transparent 16px),
-            linear-gradient(135deg, #141414 0%, #1C1C1C 25%, #2D2A24 50%, #3A3327 75%, #4A402E 100%);
+            linear-gradient(
+                135deg,
+                #141414 0%,
+                #1C1C1C 25%,
+                #2D2A24 50%,
+                #3A3327 75%,
+                #4A402E 100%
+            );
         background-attachment: fixed;
-        background-size: auto;
     }
     .block-container {
         padding-top: 2.4rem;
