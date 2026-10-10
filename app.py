@@ -382,15 +382,52 @@ st.divider(); section_title("FINAL VERDICT",COLORS['navy'])
 st.write("The dashboard distinguishes between physical consumption records, pump-derived calculations, and model-based RSM predictions. Pump uncertainty is applied only to the pump-derived dataset, while WADCN analytical uncertainty is applied only to the RSM uncertainty evaluation. Warehouse data are treated as the physical consumption baseline. The optimized RSM dosing strategy reduces SMBS consumption while maintaining comparable CuSO₄ requirements and the WADCN compliance target. The public dashboard reports percentage reductions while withholding commercial pricing and absolute savings. This preserves the technical comparison without disclosing confidential financial information.")
 
 # =========================
-# NEWMONT MERIAN MINE VIDEO
+# NEWMONT MERIAN MINE VIDEOS
 # =========================
 st.divider()
-section_title("NEWMONT MERIAN MINE VIDEO", COLORS["navy"])
+section_title("NEWMONT MERIAN MINE VIDEOS", COLORS["navy"])
+
 st.markdown(
-    "Explore available YouTube videos about Newmont Merian Mine using the link below."
-)
-st.link_button(
-    "▶ Open Newmont Merian Mine videos on YouTube",
-    "https://www.youtube.com/results?search_query=newmont+Merian+mine",
-    use_container_width=True,
+    """
+    <div style="text-align:center; padding:1rem 0 1.25rem 0;">
+        <a
+            href="https://www.youtube.com/results?search_query=newmont+Merian+mine"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open Newmont Merian Mine videos on YouTube"
+            style="text-decoration:none; display:inline-block;"
+        >
+            <div style="
+                width:110px;
+                height:76px;
+                background:#FF0000;
+                border-radius:18px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                margin:0 auto;
+                box-shadow:0 8px 20px rgba(0,0,0,0.28);
+                transition:transform 0.2s ease, box-shadow 0.2s ease;
+            ">
+                <div style="
+                    width:0;
+                    height:0;
+                    border-top:17px solid transparent;
+                    border-bottom:17px solid transparent;
+                    border-left:28px solid #FFFFFF;
+                    margin-left:7px;
+                "></div>
+            </div>
+            <div style="
+                color:#071B4D;
+                font-size:1rem;
+                font-weight:800;
+                margin-top:0.65rem;
+            ">
+                View Newmont Merian Mine videos
+            </div>
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
