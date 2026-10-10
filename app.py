@@ -45,12 +45,47 @@ st.markdown(
     <style>
     .stApp {
         background:
+            /* Faded topographic / mining contour layers */
+            repeating-radial-gradient(
+                ellipse at 12% 22%,
+                transparent 0px,
+                transparent 34px,
+                rgba(255, 215, 0, 0.055) 36px,
+                transparent 38px,
+                transparent 67px
+            ),
+            repeating-radial-gradient(
+                ellipse at 88% 28%,
+                transparent 0px,
+                transparent 45px,
+                rgba(244, 207, 87, 0.045) 47px,
+                transparent 49px,
+                transparent 82px
+            ),
+            repeating-radial-gradient(
+                ellipse at 65% 82%,
+                transparent 0px,
+                transparent 58px,
+                rgba(212, 175, 55, 0.040) 60px,
+                transparent 62px,
+                transparent 102px
+            ),
+            repeating-radial-gradient(
+                ellipse at 30% 70%,
+                transparent 0px,
+                transparent 74px,
+                rgba(255, 225, 120, 0.025) 76px,
+                transparent 78px,
+                transparent 126px
+            ),
+            /* Existing gold light effects */
             radial-gradient(circle at 15% 20%, rgba(255,215,0,0.18), transparent 22%),
             radial-gradient(circle at 85% 30%, rgba(212,175,55,0.15), transparent 25%),
             radial-gradient(circle at 40% 80%, rgba(255,223,90,0.12), transparent 28%),
             repeating-linear-gradient(135deg, rgba(255,215,0,0.02) 0px, rgba(255,215,0,0.02) 8px, transparent 8px, transparent 16px),
             linear-gradient(135deg, #141414 0%, #1C1C1C 25%, #2D2A24 50%, #3A3327 75%, #4A402E 100%);
         background-attachment: fixed;
+        background-size: auto;
     }
     .block-container {
         padding-top: 2.4rem;
