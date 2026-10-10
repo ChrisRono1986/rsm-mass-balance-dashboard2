@@ -45,40 +45,40 @@ st.markdown(
     <style>
     .stApp {
         background:
-            /* Faded topographic / mining contour layers */
+            /* Clearly visible faded topographic contour lines */
             repeating-radial-gradient(
-                ellipse at 12% 22%,
+                ellipse at 10% 18%,
                 transparent 0px,
-                transparent 34px,
-                rgba(255, 215, 0, 0.055) 36px,
-                transparent 38px,
-                transparent 67px
+                transparent 30px,
+                rgba(255, 215, 0, 0.20) 32px,
+                transparent 35px,
+                transparent 61px
             ),
             repeating-radial-gradient(
-                ellipse at 88% 28%,
+                ellipse at 92% 25%,
                 transparent 0px,
-                transparent 45px,
-                rgba(244, 207, 87, 0.045) 47px,
-                transparent 49px,
-                transparent 82px
+                transparent 42px,
+                rgba(244, 207, 87, 0.17) 44px,
+                transparent 47px,
+                transparent 78px
             ),
             repeating-radial-gradient(
-                ellipse at 65% 82%,
+                ellipse at 68% 78%,
                 transparent 0px,
-                transparent 58px,
-                rgba(212, 175, 55, 0.040) 60px,
-                transparent 62px,
-                transparent 102px
+                transparent 55px,
+                rgba(212, 175, 55, 0.15) 57px,
+                transparent 60px,
+                transparent 98px
             ),
             repeating-radial-gradient(
-                ellipse at 30% 70%,
+                ellipse at 28% 72%,
                 transparent 0px,
-                transparent 74px,
-                rgba(255, 225, 120, 0.025) 76px,
-                transparent 78px,
-                transparent 126px
+                transparent 70px,
+                rgba(255, 225, 120, 0.12) 72px,
+                transparent 75px,
+                transparent 120px
             ),
-            /* Existing gold light effects */
+            /* Gold light effects */
             radial-gradient(circle at 15% 20%, rgba(255,215,0,0.18), transparent 22%),
             radial-gradient(circle at 85% 30%, rgba(212,175,55,0.15), transparent 25%),
             radial-gradient(circle at 40% 80%, rgba(255,223,90,0.12), transparent 28%),
