@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import base64
+from pathlib import Path
 
 # Public GitHub version: commercial prices and absolute cost values are not included.
 st.set_page_config(page_title="RSM Mass Balance Dashboard", page_icon="⚗️", layout="wide")
@@ -38,37 +40,61 @@ DEFAULTS = {
 }
 
 # =========================
+# BACKGROUND IMAGE
+# =========================
+def image_data_uri(filename):
+    image_path = Path(__file__).resolve().parent / filename
+    if not image_path.exists():
+        return ""
+    mime = "image/png" if image_path.suffix.lower() == ".png" else "image/jpeg"
+    encoded = base64.b64encode(image_path.read_bytes()).decode("utf-8")
+    return f"data:{mime};base64,{encoded}"
+
+CONTOUR_BG = image_data_uri("Contourmap.png")
+
+def add_contour_background(fig, opacity=0.22):
+    if CONTOUR_BG:
+        fig.add_layout_image(
+            dict(
+                source=CONTOUR_BG,
+                xref="paper", yref="paper",
+                x=0, y=1, sizex=1, sizey=1,
+                sizing="stretch",
+                opacity=opacity,
+                layer="below",
+            )
+        )
+    fig.update_layout(
+        paper_bgcolor="rgba(255,255,255,0.72)",
+        plot_bgcolor="rgba(255,255,255,0.58)",
+    )
+    return fig
+
+# =========================
 # CSS
 # =========================
-st.markdown(
-    """
+dashboard_css = """
     <style>
     .stApp {
-        background:
-            linear-gradient(rgba(20,20,20,0.55), rgba(20,20,20,0.55)),
-            url("Contourmap.png");
+        background-image:
+            linear-gradient(rgba(20,20,20,0.42), rgba(20,20,20,0.42)),
+            url("__CONTOUR_BG__");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
-
     .block-container {
         padding-top: 2.4rem;
         padding-bottom: 1rem;
         padding-left: 1.25rem;
         padding-right: 1.25rem;
         max-width: 98%;
-
-        /* Contourmap.png is visible across the main dashboard surface. */
         background-image:
-            linear-gradient(rgba(255,255,255,0.78), rgba(255,255,255,0.78)),
-            url("Contourmap.png");
+            linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.72)),
+            url("__CONTOUR_BG__");
         background-size: cover;
         background-position: center top;
-        background-repeat: no-repeat;
-        background-attachment: local;
-
         border: 1px solid rgba(212,175,55,0.55);
         border-radius: 24px;
         box-shadow: 0 8px 30px rgba(0,0,0,0.32), 0 0 24px rgba(212,175,55,0.16);
@@ -76,6 +102,39 @@ st.markdown(
         margin-bottom: 1rem;
     }
 
+    /* Contour map backgrounds for dashboard sections */
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+        background-image:
+            linear-gradient(rgba(255,255,255,0.76), rgba(255,255,255,0.76)),
+            url("__CONTOUR_BG__") !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+    div[data-testid="stDataFrame"] {
+        background-image:
+            linear-gradient(rgba(255,255,255,0.80), rgba(255,255,255,0.80)),
+            url("__CONTOUR_BG__") !important;
+        background-size: cover !important;
+        border-radius: 8px;
+        padding: 3px;
+    }
+    div[data-testid="stPlotlyChart"] {
+        background-image:
+            linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.72)),
+            url("__CONTOUR_BG__") !important;
+        background-size: cover !important;
+        background-position: center !important;
+        border: 1px solid rgba(212,175,55,0.45);
+        border-radius: 14px;
+        padding: 6px;
+    }
+    .section-label {
+        background-image:
+            linear-gradient(rgba(255,255,255,0.18), rgba(255,255,255,0.18)),
+            url("__CONTOUR_BG__") !important;
+        background-size: cover !important;
+        background-blend-mode: soft-light;
+    }
     /* Mining-themed hero banner */
     .title-card {
         position:relative;overflow:hidden;border:3px solid #D4AF37;border-radius:24px;
@@ -120,7 +179,7 @@ st.markdown(
     .zone-optimal,.zone-warning,.zone-overdose {border-radius:9px;padding:.55rem;font-weight:700;margin-bottom:.35rem;color:#000!important;}
     .zone-optimal {background:#EAF5EA;border-left:7px solid #178A3B}.zone-warning{background:#FFF6E5;border-left:7px solid #F5A623}.zone-overdose{background:#FDEBEE;border-left:7px solid #B00020}
     div[data-testid="stMetricValue"] {font-size:1.15rem;}
-    div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box) {border-width:9px!important;border-radius:22px!important;box-shadow:0 10px 28px rgba(0,0,0,.32),0 0 0 3px rgba(255,255,255,.85) inset!important;background:rgba(255,255,255,.96)!important;}
+    div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box) {border-width:9px!important;border-radius:22px!important;box-shadow:0 10px 28px rgba(0,0,0,.32),0 0 0 3px rgba(255,255,255,.85) inset!important;background-color:rgba(255,255,255,.18)!important;}
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#0B6B2B"]){border-color:#008C3A!important}
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#064A9B"]){border-color:#006FE6!important}
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#5A168D"]){border-color:#8A2BE2!important}
@@ -131,9 +190,10 @@ st.markdown(
     div[data-testid="stAlert"] * {color:inherit!important;}
     @media(max-width:900px){.title-card{padding:1rem .75rem 1.1rem;border-radius:18px}.mining-step{min-width:40px;height:38px;padding:0 .45rem;font-size:1.2rem}.mining-flow-arrow{font-size:1rem}.mining-kicker{font-size:.65rem;letter-spacing:.12rem}.subtitle{font-size:.86rem}}
     </style>
-    """,
-    unsafe_allow_html=True,
-)
+    """
+
+dashboard_css = dashboard_css.replace("__CONTOUR_BG__", CONTOUR_BG)
+st.markdown(dashboard_css, unsafe_allow_html=True)
 
 # =========================
 # HELPERS
@@ -304,6 +364,7 @@ with c3:
         wadcn=st.slider("Illustrative treated WADCN result (ppm)",0.0,2.0,0.45,0.01)
         fig_gauge=go.Figure(go.Indicator(mode="gauge+number+delta",value=wadcn,delta={"reference":WADCN_TARGET,"increasing":{"color":COLORS['red']},"decreasing":{"color":COLORS['green']}},gauge={"axis":{"range":[0,2.0]},"bar":{"color":COLORS['purple']},"steps":[{"range":[0,WADCN_TARGET],"color":"#20C997"},{"range":[WADCN_TARGET,1.0],"color":"#FFC107"},{"range":[1.0,2.0],"color":"#FF3B30"}],"threshold":{"line":{"color":"#8B0000","width":6},"thickness":.9,"value":WADCN_TARGET}},title={"text":"<b>Treated WADCN vs 0.5 ppm Target</b>"},number={"font":{"size":42,"color":"#071B4D"}}))
         fig_gauge.update_layout(height=285,margin=dict(l=20,r=20,t=60,b=10),paper_bgcolor="rgba(255,255,255,0)",plot_bgcolor="rgba(255,255,255,0)",font=dict(color="#071B4D",size=14))
+        add_contour_background(fig_gauge, opacity=0.24)
         st.plotly_chart(fig_gauge,use_container_width=True)
 
 with st.expander("Live Reduction Percentages"):
@@ -313,9 +374,9 @@ with st.expander("Live Reduction Percentages"):
 st.divider(); left,right=st.columns(2)
 chart_df=pd.DataFrame({"Method":["Warehouse","Pump central","RSM central"],"SMBS tons":[warehouse['smbs_tons'],pumps['smbs_tons'],RSM['smbs_tons_central']],"CuSO₄ tons":[warehouse['cuso4_tons'],pumps['cuso4_tons'],RSM['cuso4_tons_central']]})
 with left:
-    fig=go.Figure(); fig.add_bar(x=chart_df['Method'],y=chart_df['SMBS tons'],name='SMBS'); fig.add_bar(x=chart_df['Method'],y=chart_df['CuSO₄ tons'],name='CuSO₄'); fig.update_layout(title='Total Reagent Consumption',barmode='group',yaxis_title='tons',height=380); st.plotly_chart(fig,use_container_width=True)
+    fig=go.Figure(); fig.add_bar(x=chart_df['Method'],y=chart_df['SMBS tons'],name='SMBS'); fig.add_bar(x=chart_df['Method'],y=chart_df['CuSO₄ tons'],name='CuSO₄'); fig.update_layout(title='Total Reagent Consumption',barmode='group',yaxis_title='tons',height=380); add_contour_background(fig, opacity=0.24); st.plotly_chart(fig,use_container_width=True)
 with right:
-    fig2=go.Figure(); fig2.add_bar(x=['SMBS','CuSO₄','Overall'],y=[smbs_reduction_pct,cuso4_reduction_pct,total_reduction_pct],text=[f"{smbs_reduction_pct:.1f}%",f"{cuso4_reduction_pct:.1f}%",f"{total_reduction_pct:.1f}%"],textposition='outside',marker_color=[COLORS['green'],COLORS['orange'],COLORS['blue']],name='Reduction'); fig2.update_layout(title='Reagent Reduction Relative to Warehouse Baseline',yaxis_title='Reduction (%)',height=380,showlegend=False); st.plotly_chart(fig2,use_container_width=True)
+    fig2=go.Figure(); fig2.add_bar(x=['SMBS','CuSO₄','Overall'],y=[smbs_reduction_pct,cuso4_reduction_pct,total_reduction_pct],text=[f"{smbs_reduction_pct:.1f}%",f"{cuso4_reduction_pct:.1f}%",f"{total_reduction_pct:.1f}%"],textposition='outside',marker_color=[COLORS['green'],COLORS['orange'],COLORS['blue']],name='Reduction'); fig2.update_layout(title='Reagent Reduction Relative to Warehouse Baseline',yaxis_title='Reduction (%)',height=380,showlegend=False); add_contour_background(fig2, opacity=0.24); st.plotly_chart(fig2,use_container_width=True)
 
 st.divider(); section_title("FINAL VERDICT",COLORS['navy'])
 st.write("The dashboard distinguishes between physical consumption records, pump-derived calculations, and model-based RSM predictions. Pump uncertainty is applied only to the pump-derived dataset, while WADCN analytical uncertainty is applied only to the RSM uncertainty evaluation. Warehouse data are treated as the physical consumption baseline. The optimized RSM dosing strategy reduces SMBS consumption while maintaining comparable CuSO₄ requirements and the WADCN compliance target. The public dashboard reports percentage reductions while withholding commercial pricing and absolute savings. This preserves the technical comparison without disclosing confidential financial information.")
