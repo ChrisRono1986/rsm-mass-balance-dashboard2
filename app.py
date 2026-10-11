@@ -596,3 +596,37 @@ with gold_col:
         height=530,
         scrolling=False,
     )
+
+# =========================
+# MERIAN GOLD MINE LOCATION
+# =========================
+st.divider()
+section_title("MERIAN GOLD MINE LOCATION", COLORS["navy"])
+
+components.html(
+    """
+    <div style="
+        width:100%;
+        height:600px;
+        border-radius:16px;
+        overflow:hidden;
+        border:2px solid rgba(212,175,55,0.75);
+        box-shadow:0 8px 24px rgba(0,0,0,0.28);
+        background:#000;
+        box-sizing:border-box;
+    ">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5815.026729884526!2d-54.553070583622855!3d5.109948109724542!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8d0bdba6d60ba745%3A0x1a1dbf909170658c!2sMerian%20Mine!5e1!3m2!1sen!2s!4v1791722593077!5m2!1sen!2s"
+            width="100%"
+            height="100%"
+            style="border:0; display:block;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="Merian Gold Mine location on Google Maps"
+        ></iframe>
+    </div>
+    """,
+    height=620,
+    scrolling=False,
+)
