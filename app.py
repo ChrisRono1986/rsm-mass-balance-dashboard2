@@ -179,7 +179,20 @@ dashboard_css = """
     .note {border:1px dashed #999;border-radius:8px;padding:.55rem;background:#fbfbfb;font-size:.82rem;margin-top:.4rem;}
     .zone-optimal,.zone-warning,.zone-overdose {border-radius:9px;padding:.55rem;font-weight:700;margin-bottom:.35rem;color:#000!important;}
     .zone-optimal {background:#EAF5EA;border-left:7px solid #178A3B}.zone-warning{background:#FFF6E5;border-left:7px solid #F5A623}.zone-overdose{background:#FDEBEE;border-left:7px solid #B00020}
-    div[data-testid="stMetricValue"] {font-size:1.15rem;}
+    div[data-testid="stMetricValue"] {
+        font-size:1.15rem;
+        text-align:center !important;
+        width:100% !important;
+    }
+    div[data-testid="stMetricLabel"],
+    div[data-testid="stMetricLabel"] p,
+    div[data-testid="stMetricValue"],
+    div[data-testid="stMetricDelta"] {
+        justify-content:center !important;
+        text-align:center !important;
+        width:100% !important;
+    }
+    div[data-testid="stMetric"] {text-align:center !important;}
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box) {border-width:9px!important;border-radius:22px!important;box-shadow:0 10px 28px rgba(0,0,0,.32),0 0 0 3px rgba(255,255,255,.85) inset!important;background-color:rgba(255,255,255,.18)!important;}
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#0B6B2B"]){border-color:#008C3A!important}
     div[data-testid="stVerticalBlockBorderWrapper"]:has(.header-box[style*="#064A9B"]){border-color:#006FE6!important}
@@ -268,6 +281,17 @@ def zone_label(value, low, high, unit):
     st.markdown(f"<div class='{cls}'>{status}<br><span style='font-weight:500'>Value: {value:.1f} {unit} | Target: {low:.1f}–{high:.1f}</span></div>", unsafe_allow_html=True)
 
 
+def centered_table(df):
+    return (
+        df.style
+        .set_properties(**{"text-align": "center"})
+        .set_table_styles([
+            {"selector": "th", "props": [("text-align", "center")]},
+            {"selector": "td", "props": [("text-align", "center")]},
+        ])
+    )
+
+
 def tables(r, color, note_type):
     section_title("DOSING SUMMARY", "#F2F2F2", color)
     dosing=pd.DataFrame({"Parameter":["Slurry flow","Effective hours","SMBS dosing","SMBS mass flow","CuSO₄ dosing","CuSO₄ mass flow"],"Value":[f"{SLURRY_FLOW_M3H:,.0f} m³/h",f"{EFFECTIVE_HOURS_JAN_NOV:,.1f} h",f"{r['smbs_mgl']:.1f} mg/L",f"{r['smbs_kgh']:.1f} kg/h",f"{r['cuso4_mgl']:.1f} mg/L",f"{r['cuso4_kgh']:.1f} kg/h"]})
@@ -286,7 +310,6 @@ def show_panel(title,subtitle,color,default_smbs,default_cuso4,key,note_type):
         panel_header(title,subtitle,color); uncertainty_banner(note_type,color)
         smbs=st.slider("SMBS dosing (mg/L)",0.0,150.0,float(default_smbs),0.1,key=f"{key}_smbs")
 
-        # Finger pointer displayed between the SMBS and CuSO₄ sliders.
         pointer_left, pointer_center, pointer_right = st.columns([3, 1, 3])
         with pointer_center:
             st.image("Finger pointer.png", use_container_width=True)
@@ -346,13 +369,13 @@ with col3:
 
 st.divider(); section_title("FORMAL RSM UNCERTAINTY RESULTS: WADCN ±0.57 ppm APPLIED TO 8003 DATA POINTS",COLORS['purple'])
 rsm_unc=pd.DataFrame({"Result":["Average dosing (m³/h)","Total consumption (m³)","Total consumption (tons)"],"SMBS lower":[RSM['smbs_m3h_low'],RSM['smbs_m3_low'],RSM['smbs_tons_low']],"SMBS central":[RSM['smbs_m3h_central'],RSM['smbs_m3_central'],RSM['smbs_tons_central']],"SMBS upper":[RSM['smbs_m3h_high'],RSM['smbs_m3_high'],RSM['smbs_tons_high']],"CuSO₄ lower":[RSM['cuso4_m3h_low'],RSM['cuso4_m3_low'],RSM['cuso4_tons_low']],"CuSO₄ central":[RSM['cuso4_m3h_central'],RSM['cuso4_m3_central'],RSM['cuso4_tons_central']],"CuSO₄ upper":[RSM['cuso4_m3h_high'],RSM['cuso4_m3_high'],RSM['cuso4_tons_high']]})
-st.dataframe(rsm_unc,use_container_width=True,hide_index=True)
+st.dataframe(centered_table(rsm_unc),use_container_width=True,hide_index=True)
 
 st.divider(); section_title("COMPARISON: RSM OPTIMIZED vs WAREHOUSE (ACTUAL)",COLORS['green'])
 comparison=pd.DataFrame({"Reagent":["SMBS","CuSO₄","TOTAL"],"Warehouse (tons)":[warehouse['smbs_tons'],warehouse['cuso4_tons'],warehouse['total_tons']],"RSM central (tons)":[RSM['smbs_tons_central'],RSM['cuso4_tons_central'],RSM['smbs_tons_central']+RSM['cuso4_tons_central']]})
 comparison['Savings (tons)']=comparison['Warehouse (tons)']-comparison['RSM central (tons)']
 comparison['Reduction (%)']=comparison['Savings (tons)']/comparison['Warehouse (tons)']*100
-st.dataframe(comparison,use_container_width=True,hide_index=True)
+st.dataframe(centered_table(comparison),use_container_width=True,hide_index=True)
 
 smbs_reduction_pct=(warehouse['smbs_tons']-RSM['smbs_tons_central'])/warehouse['smbs_tons']*100
 cuso4_reduction_pct=(warehouse['cuso4_tons']-RSM['cuso4_tons_central'])/warehouse['cuso4_tons']*100
