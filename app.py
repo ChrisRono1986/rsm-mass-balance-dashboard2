@@ -586,7 +586,9 @@ with gold_col:
                 "compareSymbols": [],
                 "support_host": "https://www.tradingview.com",
                 "studies": [],
-                "autosize": true
+                "autosize": false,
+                "width": "100%",
+                "height": 510
             }
             </script>
         </div>
