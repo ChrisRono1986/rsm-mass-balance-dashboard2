@@ -521,29 +521,24 @@ st.divider(); section_title("FINAL VERDICT",COLORS['navy'])
 st.write("The dashboard distinguishes between physical consumption records, pump-derived calculations, and model-based RSM predictions. Pump uncertainty is applied only to the pump-derived dataset, while WADCN analytical uncertainty is applied only to the RSM uncertainty evaluation. Warehouse data are treated as the physical consumption baseline. The optimized RSM dosing strategy reduces SMBS consumption while maintaining comparable CuSO₄ requirements and the WADCN compliance target. The public dashboard reports percentage reductions while withholding commercial pricing and absolute savings. This preserves the technical comparison without disclosing confidential financial information.")
 
 # =========================
-# NEWMONT MERIAN MINE VIDEO
+# NEWMONT MERIAN VIDEO + LIVE GOLD PRICE
 # =========================
 st.divider()
-section_title("NEWMONT MERIAN MINE VIDEO", COLORS["navy"])
+video_col, gold_col = st.columns(2, gap="large")
 
-components.html(
-    """
-    <div style="
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        width:100%;
-        padding:12px 0 18px 0;
-        box-sizing:border-box;
-    ">
+with video_col:
+    section_title("NEWMONT MERIAN MINE VIDEO", COLORS["navy"])
+    components.html(
+        """
         <div style="
-            width:min(100%, 960px);
-            aspect-ratio:16 / 9;
+            width:100%;
+            height:510px;
             border-radius:16px;
             overflow:hidden;
             border:2px solid rgba(212,175,55,0.75);
             box-shadow:0 8px 24px rgba(0,0,0,0.28);
             background:#000;
+            box-sizing:border-box;
         ">
             <iframe
                 width="100%"
@@ -556,8 +551,46 @@ components.html(
                 style="display:block;"
             ></iframe>
         </div>
-    </div>
-    """,
-    height=570,
-    scrolling=False,
-)
+        """,
+        height=530,
+        scrolling=False,
+    )
+
+with gold_col:
+    section_title("LIVE GOLD PRICE", COLORS["navy"])
+    components.html(
+        """
+        <div class="tradingview-widget-container" style="height:510px;width:100%;border-radius:16px;overflow:hidden;border:2px solid rgba(212,175,55,0.75);box-shadow:0 8px 24px rgba(0,0,0,0.28);box-sizing:border-box;">
+            <div class="tradingview-widget-container__widget" style="height:100%;width:100%;"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {
+                "allow_symbol_change": true,
+                "calendar": false,
+                "details": false,
+                "hide_side_toolbar": true,
+                "hide_top_toolbar": false,
+                "hide_legend": false,
+                "hide_volume": false,
+                "hotlist": false,
+                "interval": "D",
+                "locale": "en",
+                "save_image": true,
+                "style": "1",
+                "symbol": "TVC:GOLD",
+                "theme": "dark",
+                "timezone": "Etc/UTC",
+                "backgroundColor": "#131722",
+                "gridColor": "rgba(212,175,55,0.12)",
+                "watchlist": [],
+                "withdateranges": true,
+                "compareSymbols": [],
+                "support_host": "https://www.tradingview.com",
+                "studies": [],
+                "autosize": true
+            }
+            </script>
+        </div>
+        """,
+        height=530,
+        scrolling=False,
+    )
