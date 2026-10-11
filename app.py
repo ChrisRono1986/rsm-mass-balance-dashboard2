@@ -287,7 +287,7 @@ def show_panel(title,subtitle,color,default_smbs,default_cuso4,key,note_type):
         smbs=st.slider("SMBS dosing (mg/L)",0.0,150.0,float(default_smbs),0.1,key=f"{key}_smbs")
 
         # Finger pointer displayed between the SMBS and CuSO₄ sliders.
-        pointer_left, pointer_center, pointer_right = st.columns([1.25, 1, 1.25])
+        pointer_left, pointer_center, pointer_right = st.columns([3, 1, 3])
         with pointer_center:
             st.image("Finger pointer.png", use_container_width=True)
 
