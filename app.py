@@ -285,6 +285,12 @@ def show_panel(title,subtitle,color,default_smbs,default_cuso4,key,note_type):
     with st.container(border=True):
         panel_header(title,subtitle,color); uncertainty_banner(note_type,color)
         smbs=st.slider("SMBS dosing (mg/L)",0.0,150.0,float(default_smbs),0.1,key=f"{key}_smbs")
+
+        # Finger pointer displayed between the SMBS and CuSO₄ sliders.
+        pointer_left, pointer_center, pointer_right = st.columns([1.25, 1, 1.25])
+        with pointer_center:
+            st.image("Finger pointer.png", use_container_width=True)
+
         cuso4=st.slider("CuSO₄ dosing (mg/L)",0.0,80.0,float(default_cuso4),0.1,key=f"{key}_cuso4")
         r=calc_from_mgl(smbs,cuso4); dose_pills(smbs,cuso4,color,note_type,r); process_visual()
         st.markdown("**Operational zone vs RSM target region**")
