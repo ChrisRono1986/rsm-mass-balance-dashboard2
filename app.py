@@ -163,6 +163,63 @@ dashboard_css = """
     .title-data-pill {color:#fff;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:.36rem .75rem;font-size:.78rem;font-weight:750;box-shadow:0 3px 9px rgba(0,0,0,.16);}
     .title-data-pill b {color:#F7DF7B;}
 
+    .optimization-banner {
+        position:relative;
+        overflow:hidden;
+        margin:0.15rem 0 1rem 0;
+        padding:1rem 1.15rem;
+        border:2px solid #D4AF37;
+        border-radius:18px;
+        background:
+            radial-gradient(circle at 12% 20%,rgba(255,223,90,.20),transparent 25%),
+            linear-gradient(135deg,#3A2A05 0%,#7A5708 45%,#B8860B 100%);
+        box-shadow:0 8px 20px rgba(0,0,0,.23),0 0 18px rgba(212,175,55,.25);
+        color:#fff;
+    }
+    .optimization-banner-title {
+        text-align:center;
+        color:#FFF4B8;
+        font-size:1.05rem;
+        font-weight:900;
+        letter-spacing:.11rem;
+        margin-bottom:.7rem;
+        text-shadow:0 2px 4px rgba(0,0,0,.4);
+    }
+    .optimization-kpi-row {
+        display:grid;
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:.65rem;
+    }
+    .optimization-kpi {
+        text-align:center;
+        padding:.65rem .45rem;
+        border:1px solid rgba(255,255,255,.28);
+        border-radius:12px;
+        background:rgba(255,255,255,.12);
+        box-shadow:0 3px 10px rgba(0,0,0,.13);
+    }
+    .optimization-kpi-label {
+        color:#FFF9DC;
+        font-size:.72rem;
+        font-weight:800;
+        letter-spacing:.035rem;
+        text-transform:uppercase;
+    }
+    .optimization-kpi-value {
+        color:#fff;
+        font-size:1.34rem;
+        line-height:1.15;
+        font-weight:950;
+        margin-top:.25rem;
+    }
+    .optimization-kpi-note {
+        color:#FFF4B8;
+        font-size:.68rem;
+        margin-top:.18rem;
+    }
+    @media(max-width:900px){
+        .optimization-kpi-row{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
     .header-box {color:white;padding:.6rem;border-radius:12px;text-align:center;font-size:1rem;font-weight:900;margin-bottom:.25rem;}
     .subheader-small {font-size:.82rem;font-style:italic;font-weight:600;opacity:.95;}
     .uncertainty-banner {border:1px solid #cfcfcf;border-radius:10px;padding:.65rem;margin:.45rem 0 .65rem;background:#fbfbfb;font-size:.86rem;line-height:1.25;}
@@ -351,6 +408,58 @@ with title_col:
         <div class="title-data-pill">🎯 Internal WADCN target: <b>≤ {WADCN_TARGET:.1f} ppm</b></div>
       </div>
     </div>""",unsafe_allow_html=True)
+
+# Executive summary calculated from the default warehouse baseline and RSM central values.
+default_warehouse = calc_from_mgl(
+    DEFAULTS["warehouse_smbs"],
+    DEFAULTS["warehouse_cuso4"],
+)
+default_smbs_reduction = (
+    (default_warehouse["smbs_tons"] - RSM["smbs_tons_central"])
+    / default_warehouse["smbs_tons"]
+) * 100
+default_cuso4_reduction = (
+    (default_warehouse["cuso4_tons"] - RSM["cuso4_tons_central"])
+    / default_warehouse["cuso4_tons"]
+) * 100
+default_total_reduction = (
+    (
+        default_warehouse["total_tons"]
+        - (RSM["smbs_tons_central"] + RSM["cuso4_tons_central"])
+    )
+    / default_warehouse["total_tons"]
+) * 100
+
+st.markdown(
+    f"""
+    <div class="optimization-banner">
+        <div class="optimization-banner-title">🏆 OPTIMIZATION ACHIEVED</div>
+        <div class="optimization-kpi-row">
+            <div class="optimization-kpi">
+                <div class="optimization-kpi-label">SMBS Reduction</div>
+                <div class="optimization-kpi-value">▼ {default_smbs_reduction:.1f}%</div>
+                <div class="optimization-kpi-note">vs warehouse baseline</div>
+            </div>
+            <div class="optimization-kpi">
+                <div class="optimization-kpi-label">CuSO₄ Reduction</div>
+                <div class="optimization-kpi-value">▼ {default_cuso4_reduction:.1f}%</div>
+                <div class="optimization-kpi-note">vs warehouse baseline</div>
+            </div>
+            <div class="optimization-kpi">
+                <div class="optimization-kpi-label">Total Reagent Reduction</div>
+                <div class="optimization-kpi-value">▼ {default_total_reduction:.1f}%</div>
+                <div class="optimization-kpi-note">combined consumption</div>
+            </div>
+            <div class="optimization-kpi">
+                <div class="optimization-kpi-label">WADCN Target</div>
+                <div class="optimization-kpi-value">✓ ≤ {WADCN_TARGET:.1f} ppm</div>
+                <div class="optimization-kpi-note">internal compliance target</div>
+            </div>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 with st.expander("Constants and uncertainty rules used in this dashboard"):
     constants=pd.DataFrame({"Parameter":["Slurry flow rate","Annual mill uptime 2025","Effective operating hours Jan–Nov","Annualization factor","SMBS stock solution strength","CuSO₄ stock solution strength","SMBS price","CuSO₄ price","Pump uncertainty","WADCN DETOXFEED expanded uncertainty","Internal WADCN target"],"Value":[f"{SLURRY_FLOW_M3H:,.0f} m³/h",f"{ANNUAL_UPTIME_H:,.2f} h",f"{EFFECTIVE_HOURS_JAN_NOV:,.1f} h",f"{ANNUALIZATION_FACTOR:.4f}",f"{SMBS_STRENGTH_KG_M3:.2f} kg/m³",f"{CUSO4_STRENGTH_KG_M3:.2f} kg/m³","CONFIDENTIAL","CONFIDENTIAL","±10% applied only to actual dosing pumps","±0.57 ppm applied only to RSM WADCN-feed recalculation",f"WADCN ≤ {WADCN_TARGET} ppm"]})
